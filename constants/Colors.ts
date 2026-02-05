@@ -1,37 +1,36 @@
-export const Color = {
+export const Colors = {
     dark: {
-        primary: "#13a4ec",
+        primary: "#8B5CF6",
         background: "#101c22",
         card: "#0a1215",
         textPrimary: "#eee",
         box: "#1c2327",
         iconColor: "#ccc",
         navColor: "rgba(16,28,34,0.84)",
-        tagTypeColor: "#13a4ec",
-        tagTypeIconColor: "#13a4ec",
-        tagTypeBackground: "rgb(19 164 236 / 0.2)",
-        tagTypeBorderColor: "rgb(19 164 236 / 0.3)",
+        borderNavColor: "#444",
+        shadowNavColor: "#444",
         tagSourceBackground: "#1e293b",
         tagSourceColor: "#cbd5e1",
         tagSourceIconColor: "#94a3b8",
         tagSourceBorderColor: "#1e293b",
+        switchNotActiveColor: "rgba(139,92,246,0.3)"
     },
     light: {
-        primary: "#13a4ec",
+        primary: "#8B5CF6",
         background: "#f6f7f8",
         card: "#e6e2e2",
         textPrimary: "#000",
         box: "#fff",
         iconColor: "#555",
-        navColor: "rgba(255,255,255,0.83)",
-        tagTypeColor: "#1e3a8a",
-        tagTypeIconColor: "#2563eb",
-        tagTypeBackground: "#eff6ff",
-        tagTypeBorderColor: "#dbeafe",
+        navColor: "rgba(255,255,255,0.94)",
+        borderNavColor: "#eee",
+        shadowNavColor: "#888",
         tagSourceBackground: "#f1f5f9",
         tagSourceColor: "#334155",
         tagSourceIconColor: "#64748b",
-        tagSourceBorderColor: "#e2e8f0"
+        tagSourceBorderColor: "#e2e8f0",
+        switchNotActiveColor: "rgba(139,92,246,0.3)"
+
     }
 }
 

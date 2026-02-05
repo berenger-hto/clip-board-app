@@ -2,7 +2,7 @@ export type Data = {
     id: number
     type: "CODE" | "TEXT" | "URL"
     // La durée en timestamp
-    duration: number
-    from: "Mobile" | "PC"
+    createdAt: number
+    source: "Mobile" | "PC"
     value: string
 }

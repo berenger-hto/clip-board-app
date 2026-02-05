@@ -2,87 +2,94 @@ import {Data} from "@/types/types";
 
 export const DATA_MOCK: Data[] = [
     {
+        id: 1200,
+        type: "TEXT",
+        createdAt: 500,
+        source: "PC",
+        value: "Cette donnée n'existe plus dans le presse-papier synchronisé ! \n Cette donnée n'existe plus dans le presse-papier synchronisé ! \nCette donnée n'existe plus dans le presse-papier synchronisé ! \nCette donnée n'existe plus dans le presse-papier synchronisé ! \nCette donnée n'existe plus dans le presse-papier synchronisé ! \nCette donnée n'existe plus dans le presse-papier synchronisé ! \nCette donnée n'existe plus dans le presse-papier synchronisé ! \nCette donnée n'existe plus dans le presse-papier synchronisé ! \nCette donnée n'existe plus dans le presse-papier synchronisé ! \nCette donnée n'existe plus dans le presse-papier synchronisé ! \nCette donnée n'existe plus dans le presse-papier synchronisé ! \nCette donnée n'existe plus dans le presse-papier synchronisé ! \n"
+    },
+    {
         id: 1,
         type: "CODE",
-        duration: 120,
-        from: "PC",
+        createdAt: 120,
+        source: "PC",
         value: "const primaryColor = \"#13a4ec\";\nexport default config;"
     },
     {
         id: 2,
         type: "URL",
-        duration: 45,
-        from: "Mobile",
+        createdAt: 45,
+        source: "Mobile",
         value: "https://github.com/facebook/react-native"
     },
     {
         id: 3,
         type: "TEXT",
-        duration: 300,
-        from: "PC",
+        createdAt: 300,
+        source: "PC",
         value: "Penser à vérifier les dépendances du projet avant la mise en production lundi matin."
     },
     {
         id: 4,
         type: "CODE",
-        duration: 85,
-        from: "PC",
+        createdAt: 85,
+        source: "PC",
         value: "function greet(name) {\n  return `Hello, ${name}!`;\n}"
     },
     {
         id: 5,
         type: "URL",
-        duration: 15,
-        from: "Mobile",
+        createdAt: 15,
+        source: "Mobile",
         value: "https://stackoverflow.com"
     },
     {
         id: 6,
         type: "CODE",
-        duration: 210,
-        from: "PC",
-        value: "import { useState, useEffect } from 'react';\n\nconst useAuth = () => {\n  const [user, setUser] = useState(null);\n  return user;\n};"
+        createdAt: 210,
+        source: "PC",
+        value: "import { useState, useEffect } source 'react';\n\nconst useAuth = () => {\n  const [user, setUser] = useState(null);\n  return user;\n};"
     },
     {
         id: 7,
         type: "TEXT",
-        duration: 60,
-        from: "Mobile",
+        createdAt: 60,
+        source: "Mobile",
         value: "Acheter du pain et du lait en rentrant."
     },
     {
         id: 8,
         type: "URL",
-        duration: 10,
-        from: "PC",
+        createdAt: 10,
+        source: "PC",
         value: "https://tailwind-native.com"
     },
     {
         id: 9,
         type: "TEXT",
-        duration: 150,
-        from: "Mobile",
+        createdAt: 150,
+        source: "Mobile",
         value: "Réunion prévue à 14h avec l'équipe design pour le nouveau dashboard."
     },
     {
         id: 10,
         type: "CODE",
-        duration: 45,
-        from: "PC",
+        createdAt: 45,
+        source: "PC",
         value: "{\"status\": 200, \"message\": \"Success\", \"data\": []}"
     },
     {
         id: 11,
         type: "URL",
-        duration: 5,
-        from: "Mobile",
+        createdAt: 5,
+        source: "Mobile",
         value: "google.com"
     },
     {
         id: 12,
         type: "TEXT",
-        duration: 500,
-        from: "PC",
+        createdAt: 500,
+        source: "PC",
         value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor."
     }
 ];

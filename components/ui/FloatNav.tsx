@@ -1,44 +1,85 @@
-import {TouchableOpacity, View} from "react-native";
-import {Button} from "@/components/forms/Button";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import {TouchableOpacity, TouchableOpacityProps, View as NativeView} from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import {useThemeColor} from "@/hooks/useThemeColor";
-import {useState} from "react";
+import {useEffect} from "react";
+import {ThemedText} from "@/components/ThemedText";
+import {useAppStore} from "@/store";
+
+type Tab = {
+    name: string
+    iconName: "clipboard" | "settings" | "monitor"
+}
+
+type TabElementProps = TouchableOpacityProps & {
+    tab: Tab
+    active?: boolean
+}
 
 export function FloatNav() {
-    const { isDark, colors } = useThemeColor()
-    const defaultIconColor = isDark ? "#fff" : "#000"
-    const navElements = [
+    const {colors} = useThemeColor()
+    const tabElements: Tab[] = [
         {
-            name: "Historique",
-            defaultIcon: <MaterialIcons name="history" size={24} color={defaultIconColor} />,
-            activeIcon: <MaterialIcons name="history" size={24} color="#fff" />,
+            name: "Presse-Papier",
+            iconName: "clipboard",
+        },
+        {
+            name: "Appareils",
+            iconName: "monitor"
         },
         {
             name: "Paramètres",
-            defaultIcon: <Feather name="settings" size={20} color={defaultIconColor} />,
-            activeIcon: <Feather name="settings" size={20} color="#fff" />,
-        }
+            iconName: "settings"
+        },
     ]
+    const tabActiveIndex = useAppStore(state => state.tabActiveIndex)
+    const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
 
-    const [active, setActive] = useState(0)
     const handleChangeTab = (index: number) => {
-        if (index === active) return
-        setActive(index)
+        if (index === tabActiveIndex) return
+        setTabActiveIndex(index)
     }
 
-    return <View style={{ backgroundColor: colors.navColor, borderRadius: 90, elevation: 1, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.18, shadowRadius: 1.0  }} className={`"pointer-events-auto absolute bottom-12 p-2 w-100 self-center items-center flex-row gap-2`}>
-        {navElements.map(((el, index) => {
-            const { name, activeIcon, defaultIcon } = el
-            if (index === active) {
-                return <Button key={index} active className="!rounded-full" icon={activeIcon} onPress={() => handleChangeTab(index)}>
-                    {name}
-                </Button>
-            }
+    return <NativeView
+        style={{
+            backgroundColor: colors.navColor,
+            borderRadius: 90,
+            borderColor: colors.borderNavColor,
+            shadowColor: "#444",
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 0,
+            shadowRadius: 50,
+            elevation: 4,
+        }}
+        className={`"pointer-events-auto absolute bottom-8 py-3 px-8 w-100 self-center items-center flex-row gap-10 border`}
+    >
+        {tabElements.map((tab, index) => (
+            <TabElement
+                tab={tab}
+                active={index === tabActiveIndex}
+                onPress={() => handleChangeTab(index)}
+                key={index}
+            />
+        ))}
+    </NativeView>
+}
 
-            return <TouchableOpacity key={index} className="px-4" activeOpacity={.8} onPress={() => handleChangeTab(index)}>
-                {defaultIcon}
-            </TouchableOpacity>
-        }))}
-    </View>
+function TabElement({tab, active, ...rest}: TabElementProps) {
+    const {colors, isDark} = useThemeColor()
+
+    return <TouchableOpacity
+        activeOpacity={.8}
+        className="flex-col items-center justify-center"
+        {...rest}
+    >
+        <Feather name={tab.iconName} size={16} color={active ? colors.primary : isDark ? "#aaa" : "#888"}/>
+        <ThemedText
+            className={`text-[10px] font-bold}`}
+            style={{color: active ? colors.primary : isDark ? "#aaa" : "#888", fontWeight: active ? "bold" : "normal"}}
+        >
+            {tab.name}
+        </ThemedText>
+    </TouchableOpacity>
 }

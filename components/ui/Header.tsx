@@ -6,7 +6,7 @@ import {useThemeColor} from "@/hooks/useThemeColor";
 import {SearchInput} from "@/components/ui/SearchInput";
 import {FilterButtons} from "@/components/ui/FilterButtons";
 import {useState} from "react";
-import {SyncColor} from "@/constants/Color";
+import {SyncColor} from "@/constants/Colors";
 
 export function Header() {
     const {colors} = useThemeColor()

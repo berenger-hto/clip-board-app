@@ -5,13 +5,12 @@ import {useThemeColor} from "@/hooks/useThemeColor";
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import {TagColor} from "@/constants/Color";
+import {TagColor} from "@/constants/Colors";
 import {ThemedText} from "@/components/ThemedText";
 import {openURL} from "@/functions/openURL"
 import {Button} from "@/components/forms/Button";
-import {setStringAsync} from "expo-clipboard"
 import {useRouter} from "expo-router";
-
+import {addToClipboard} from "@/functions/addToClipboard";
 
 type Props = ViewProps & {
     data: Data
@@ -20,19 +19,10 @@ type Props = ViewProps & {
 export function Card({data, className, style, ...rest}: Props) {
     const {colors, isDark} = useThemeColor()
     const headerTextColor = isDark ? "#94a3b8" : "#64748b"
-    const {type, duration, from, value, id} = data
+    const {type, createdAt, source, value, id} = data
     const router = useRouter()
 
-    const addToClipboard = async () => {
-        try {
-            await setStringAsync(value)
-        } catch (e) {
-            const error = (e as Error).toString()
-            Alert.alert("Error !", error)
-        }
-    }
-
-    return <Pressable onPress={() => router.push(`/card/[${id}]`)}>
+    return <Pressable onPress={() => router.push(`/card/${id}`)}>
         <View
             style={[style, {
                 backgroundColor: colors.box,
@@ -45,18 +35,18 @@ export function Card({data, className, style, ...rest}: Props) {
             className={clsx(`p-4 rounded-xl border ${isDark ? "border-slate-800" : "border-slate-200"}`, className)}
             {...rest}
         >
-            {/* Card Header */}
+            {/* Card CardPreviewHeader */}
             <View className="flex flex-row items-center justify-between">
                 <View className="flex flex-row gap-4">
                     <Tag type={type}/>
-                    <From from={from} color={headerTextColor}/>
+                    <From source={source} color={headerTextColor} />
                 </View>
-                <Text className="text-[10px]" style={{color: headerTextColor}}>{duration}</Text>
+                <Text className="text-[10px]" style={{color: headerTextColor}}>{createdAt}</Text>
             </View>
 
             {/*Card body*/}
             <View className="mt-4">
-                <DataObj data={value} type={type}/>
+                <DataObj data={value.slice(0, 300)} type={type} />
             </View>
 
             {/*Card Footer*/}
@@ -68,7 +58,7 @@ export function Card({data, className, style, ...rest}: Props) {
                 <Button
                     active
                     icon={<FontAwesome6 name="copy" size={14} color={"#fff"}/>}
-                    onPress={addToClipboard}
+                    onPress={() => addToClipboard(value)}
                 >
                     Copier
                 </Button>
@@ -90,24 +80,24 @@ function Tag({type}: { type: Data['type'] }) {
     </View>
 }
 
-function From({from, color}: { from: Data['from'], color: string }) {
+function From({source, color}: { source: Data['source'], color: string }) {
     return <View className="flex flex-row items-center justify-center gap-1">
-        {from.toLowerCase() === "mobile" ?
+        {source.toLowerCase() === "mobile" ?
             <Entypo name="mobile" size={10} color={color}/>
             :
             <FontAwesome name="desktop" size={13} color={color}/>
         }
-        <ThemedText style={{color}} className="text-[10px] relative -top-[1px]">From {from}</ThemedText>
+        <ThemedText style={{color}} className="text-[10px] relative -top-[1px]">From {source}</ThemedText>
     </View>
 }
 
-function DataObj({data, type}: { data: string, type: Data['type'] }) {
-    const {isDark} = useThemeColor()
+function DataObj({ data, type }: { data: string, type: Data['type'] }) {
+    const { isDark, colors } = useThemeColor()
     return <View>
         {
             type === "URL" &&
             <ThemedText
-                className="text-lg underline"
+                className="text-base underline"
                 onPress={() => openURL(data)}
             >
                 {data}
@@ -115,7 +105,7 @@ function DataObj({data, type}: { data: string, type: Data['type'] }) {
         }
         {
             type === "TEXT" &&
-            <ThemedText className="text-lg">
+            <ThemedText className="text-base">
                 {data}
             </ThemedText>
         }
@@ -123,7 +113,7 @@ function DataObj({data, type}: { data: string, type: Data['type'] }) {
             type === "CODE" &&
             <View
                 className={`"bg-slate-50 p-3 rounded-lg border border-slate-100 ${isDark && "!bg-[#111618] !border-slate-800"}`}>
-                <Text className="text-xs text-[#13a4ec] font-mono leading-relaxed">
+                <Text style={{ color: colors.primary }} className="text-xs font-mono leading-relaxed">
                     {data}
                 </Text>
             </View>
