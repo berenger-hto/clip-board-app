@@ -13,7 +13,8 @@ export const Colors = {
         tagSourceColor: "#cbd5e1",
         tagSourceIconColor: "#94a3b8",
         tagSourceBorderColor: "#1e293b",
-        switchNotActiveColor: "rgba(139,92,246,0.3)"
+        switchNotActiveColor: "rgba(139,92,246,0.8)",
+        segmentedButtonsContainerBackground: "#283339",
     },
     light: {
         primary: "#8B5CF6",
@@ -29,8 +30,8 @@ export const Colors = {
         tagSourceColor: "#334155",
         tagSourceIconColor: "#64748b",
         tagSourceBorderColor: "#e2e8f0",
-        switchNotActiveColor: "rgba(139,92,246,0.3)"
-
+        switchNotActiveColor: "rgba(139,92,246,0.8)",
+        segmentedButtonsContainerBackground: "rgb(226 232 240 / 0.5)",
     }
 }
 

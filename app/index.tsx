@@ -4,7 +4,7 @@ import {FloatNav} from "@/components/ui/FloatNav";
 import {Clipboard} from "@/components/pages/Clipboard";
 import {useAppStore} from "@/store";
 import {Settings} from "@/components/pages/Settings";
-import {NotFound} from "@/components/ui/NotFound";
+import {Devices} from "@/components/pages/Devices";
 
 export default function App() {
     const tabActiveIndex = useAppStore(state => state.tabActiveIndex)
@@ -14,9 +14,10 @@ export default function App() {
             tabActiveIndex === 0 ?
                 <Clipboard />
                 : tabActiveIndex === 1 ?
-                    <NotFound /> :
+                    <Devices /> :
                     <Settings />
         }
+
         {/*Float navigation*/}
         <FloatNav/>
 

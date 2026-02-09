@@ -8,19 +8,19 @@ import {FilterButtons} from "@/components/ui/FilterButtons";
 import {useState} from "react";
 import {SyncColor} from "@/constants/Colors";
 
-export function Header() {
+export function ClipboardHeader() {
     const {colors} = useThemeColor()
     const [synchronizeState, setSynchronizeState] = useState<"OK" | "PENDING" | "NO">("OK")
     const syncState = synchronizeState === "OK" ? "Synchronisé" : synchronizeState === "PENDING" ? "En cours" : "Non synchronisé"
 
     return <>
         <View className="items-center flex-row justify-between">
-            <ThemedText className="text-2xl font-bold opacity-90">
-                Clipboard
+            <ThemedText className="text-2xl font-bold opacity-80">
+                ClipboardX
             </ThemedText>
             <Pressable>
                 <View className="flex items-center justify-center h-10 w-10 rounded-full">
-                    <MaterialIcons name="devices" size={18} color={colors.textPrimary} className="opacity-50"/>
+                    <MaterialIcons name="devices" size={18} color={colors.textPrimary} className="opacity-50" />
                 </View>
             </Pressable>
         </View>

@@ -1,13 +1,12 @@
-import {View} from "@/components/View";
-import {ThemedText} from "@/components/ThemedText";
-import {Pressable, Switch, Text as NativeText, TextProps, View as NativeView} from "react-native";
-import {useThemeColor} from "@/hooks/useThemeColor";
-import {Input} from "@/components/forms/Input";
+import { Input } from "@/components/forms/Input";
+import { ThemedText } from "@/components/ThemedText";
+import { View } from "@/components/View";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import {useEffect, useState} from "react";
 import Slider from "@react-native-community/slider";
-import {createMMKV} from "react-native-mmkv";
+import { useState } from "react";
+import { Text as NativeText, View as NativeView, Pressable, Switch, TextProps } from "react-native";
 
 type PreferenceType = {
     name: string
@@ -31,18 +30,12 @@ export function Settings() {
             iconName: "bell"
         }
     ]
-    const storage = createMMKV()
 
     const [value, setValue] = useState(false)
     const onValueChange = () => setValue(prevState => !prevState)
-    const [sliderValue, setSliderValue] = useState(0)
+    const [sliderValue, setSliderValue] = useState(1)
     const { colors } = useThemeColor()
     const [url, setUrl] = useState("http://192.168.1.107")
-
-    useEffect(() => {
-        storage.set("url", url)
-        console.log("URL in storage: ", storage.getString("url"))
-    }, [storage, url])
 
     return <View>
         <ThemedText className="text-3xl font-bold">Paramètres</ThemedText>
@@ -72,18 +65,18 @@ export function Settings() {
             <Text className="font-bold uppercase mb-4 text-sm">Mémoire et Historique</Text>
             <View className="flex-row items-center justify-between">
                 <NativeView className="flex-row items-center justify-center gap-2">
-                    <NativeView style={{ backgroundColor: colors.tagSourceBackground}} className="h-12 w-12 rounded-lg items-center justify-center">
+                    <NativeView style={{ backgroundColor: colors.tagSourceBackground }} className="h-12 w-12 rounded-lg items-center justify-center">
                         <MaterialIcons name="history" size={18} color={colors.tagSourceIconColor} />
                     </NativeView>
                     <ThemedText className="font-semibold text-lg">Conservation de l'historique</ThemedText>
                 </NativeView>
-                <NativeText className="font-bold text-lg opacity-75" style={{color: colors.primary}}>
+                <NativeText className="font-bold text-lg opacity-75" style={{ color: colors.primary }}>
                     {Math.round(sliderValue)} {sliderValue > 1 ? "jours" : "jour"}
                 </NativeText>
             </View>
             <View className="mt-2">
                 <Slider
-                    style={{width: "100%"}}
+                    style={{ width: "100%" }}
                     minimumValue={1}
                     maximumValue={90}
                     minimumTrackTintColor={colors.textPrimary}
@@ -123,7 +116,7 @@ function Preference({ preference, active, setActive }: PreferenceProps) {
         onPress={setActive}
     >
         <NativeView className="flex-row items-center justify-center gap-2">
-            <NativeView style={{ backgroundColor: colors.tagSourceBackground}} className="h-12 w-12 rounded-lg items-center justify-center">
+            <NativeView style={{ backgroundColor: colors.tagSourceBackground }} className="h-12 w-12 rounded-lg items-center justify-center">
                 <Feather name={preference.iconName} size={18} color={colors.tagSourceIconColor} />
             </NativeView>
             <ThemedText className="font-semibold text-lg">{preference.name}</ThemedText>
@@ -135,7 +128,7 @@ function Preference({ preference, active, setActive }: PreferenceProps) {
 function Text({ children, ...rest }: TextProps) {
     const { colors } = useThemeColor()
     return <NativeText
-        style={{color: colors.tagSourceColor}}
+        style={{ color: colors.tagSourceColor }}
         {...rest}
     >
         {children}

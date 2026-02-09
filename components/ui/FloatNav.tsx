@@ -1,7 +1,6 @@
 import {TouchableOpacity, TouchableOpacityProps, View as NativeView} from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import {useThemeColor} from "@/hooks/useThemeColor";
-import {useEffect} from "react";
 import {ThemedText} from "@/components/ThemedText";
 import {useAppStore} from "@/store";
 
