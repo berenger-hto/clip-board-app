@@ -6,3 +6,9 @@ export type Data = {
     source: "Mobile" | "PC"
     value: string
 }
+
+export type ClientData = {
+    ip?: string
+    token?: string
+    expiresAt?: number
+}

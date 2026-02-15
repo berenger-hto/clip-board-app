@@ -22,6 +22,6 @@ export function Clipboard() {
             </Pressable>
         </ScrollView>
         {/*Add item to clipboard*/}
-        <AddItemToClipboard/>
+        <AddItemToClipboard />
     </>
 }

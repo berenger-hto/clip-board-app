@@ -7,8 +7,10 @@ import {SearchInput} from "@/components/ui/SearchInput";
 import {FilterButtons} from "@/components/ui/FilterButtons";
 import {useState} from "react";
 import {SyncColor} from "@/constants/Colors";
+import {useAppStore} from "@/store";
 
 export function ClipboardHeader() {
+    const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
     const {colors} = useThemeColor()
     const [synchronizeState, setSynchronizeState] = useState<"OK" | "PENDING" | "NO">("OK")
     const syncState = synchronizeState === "OK" ? "Synchronisé" : synchronizeState === "PENDING" ? "En cours" : "Non synchronisé"
@@ -18,7 +20,7 @@ export function ClipboardHeader() {
             <ThemedText className="text-2xl font-bold opacity-80">
                 ClipboardX
             </ThemedText>
-            <Pressable>
+            <Pressable onPress={() => setTabActiveIndex(1)}>
                 <View className="flex items-center justify-center h-10 w-10 rounded-full">
                     <MaterialIcons name="devices" size={18} color={colors.textPrimary} className="opacity-50" />
                 </View>

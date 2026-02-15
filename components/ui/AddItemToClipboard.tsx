@@ -1,7 +1,7 @@
-import {TouchableOpacity, View as NativeView, Text as NativeText, TouchableOpacityProps, TextInput} from "react-native";
+import {TouchableOpacity, View as NativeView, Text as NativeText, TouchableOpacityProps} from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import {useThemeColor} from "@/hooks/useThemeColor";
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useMemo, useRef, useState} from "react";
 import {BottomSheetBackdrop, BottomSheetModal, BottomSheetView, useBottomSheetModal} from "@gorhom/bottom-sheet";
 import {ThemedText} from "@/components/ThemedText";
 import {View} from "@/components/View"
@@ -62,12 +62,12 @@ export function AddItemToClipboard() {
 
     return <>
         <TouchableOpacity
-            className="absolute bottom-40 right-6 h-14 w-14 rounded-xl items-center justify-center"
+            className="absolute bottom-40 right-6 h-14 w-14 rounded-full items-center justify-center"
             style={{backgroundColor: colors.primary}}
             activeOpacity={.8}
             onPress={handlePresentModalPress}
         >
-            <Feather name="plus" size={24} color={"#fff"}/>
+            <Feather name="plus" size={24} color={"#fff"} />
         </TouchableOpacity>
 
         <BottomSheetModal
