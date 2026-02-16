@@ -1,7 +1,7 @@
 import { View } from "@/components/View";
 import { ThemedText } from "@/components/ThemedText";
 import { ScrollView, TouchableOpacity, View as NativeView } from "react-native"
-import { Data, ClientData } from "@/types/types";
+import { Data, ClientData, OS } from "@/types/types";
 import Feather from '@expo/vector-icons/Feather';
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SyncColor } from "@/constants/Colors";
@@ -12,12 +12,16 @@ import { useToast } from "react-native-toast-notifications";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { z } from "zod";
 import { useMutationQuery } from "@/hooks/useMutationQuery";
+import { useSQLite } from "@/hooks/useSQLite";
+import { useSecureStore } from "@/hooks/useSecureStore";
+import * as Device from 'expo-device'
+import { useFetchQuery } from "@/hooks/useFetchQuery";
 
 
 type DeviceItemProps = {
     type: Data["source"]
     name: string
-    statut: "Online" | "Offline"
+    statut: "Online" | "Offline" | undefined
 }
 
 const clientDataSchema = z.object({
@@ -34,8 +38,41 @@ export function Devices() {
     const [permission, requestPermission] = useCameraPermissions()
     const [scanned, setScanned] = useState(false)
     const [data, setData] = useState<ClientData | null>(null)
+    const [isCurrentDevice, setIsCurrentDevice] = useState<string | null>(null)
     const { dismiss } = useBottomSheetModal()
-    const { mutate, isSuccess, isPending, data: mutationData } = useMutationQuery("v1/auth/me")
+    const { mutate, isSuccess, isPending, data: responseData } = useMutationQuery("v1/me", () => {
+        toast.show("Connexion échouée !", {
+            type: "danger"
+        })
+    })
+
+    const [otherDevices, setOtherDevices] = useState<OS[] | null>(null)
+
+    const { data: deviceData } = useFetchQuery("v1/device")
+
+    const { addDevice, getDevices, dbReady } = useSQLite()
+    const { setValue } = useSecureStore()
+
+    const loadDevices = useCallback(async () => {
+        const devices = await getDevices()
+        if (devices) {
+            setOtherDevices(devices)
+        }
+    }, [getDevices])
+
+    useEffect(() => {
+        if (dbReady) {
+            loadDevices()
+        }
+    }, [dbReady, loadDevices])
+
+    useEffect(() => {
+        console.log("Device data", deviceData)
+        if (deviceData) {
+            setIsCurrentDevice(deviceData.os.deviceName ?? null)
+        }
+    }, [deviceData])
+
 
     const handleScan = (qrData: string) => {
         if (scanned) return
@@ -58,7 +95,6 @@ export function Devices() {
     }
 
     useEffect(() => {
-        console.log("Time", Date.now())
         console.log("Current data", data)
         if (!data) return
         dismiss()
@@ -71,20 +107,33 @@ export function Devices() {
             return
         }
 
-        // appeler le serveur pour checker la data
-
-        mutate(result.data)
+        mutate(
+            {
+                deviceName: Device.deviceName ?? "Unknown",
+                deviceOSName: Device.osName ?? "Unknown",
+                deviceOSVersion: Device.osVersion ?? "Unknown",
+                ...result.data
+            }
+        )
 
     }, [data, dismiss])
 
-
     useEffect(() => {
         console.log("Is success", isSuccess)
-        console.log("Mutation data", mutationData)
-        if (isSuccess && mutationData) {
-            toast.show(mutationData.message, {
-                type: !mutationData.success ? "warning" : "success"
+        console.log("Mutation data", responseData)
+        if (isSuccess && responseData) {
+            toast.show(responseData.message, {
+                type: !responseData.success ? "warning" : "success"
             })
+
+            if (responseData.success) {
+                addDevice(responseData.os.deviceName, responseData.os.username, responseData.os.platform)
+                    .then(() => {
+                        loadDevices()
+                    })
+                setValue("ip", data?.ip ?? "")
+                setValue("token", data?.token ?? "")
+            }
         }
     }, [isPending, isSuccess])
 
@@ -131,15 +180,20 @@ export function Devices() {
         </View>
         <View className="mt-8">
             <ThemedText className="font-bold uppercase text-sm mb-4">Cet appareil</ThemedText>
-            <DeviceItem type="Mobile" name="Tecno KL5" statut="Online" />
+            <DeviceItem type="Mobile" name={Device.deviceName ?? "Unknown"} statut="Online" />
         </View>
         <View className="mt-8" style={{ flex: 1 }}>
             <ThemedText className="font-bold uppercase text-sm mb-4">Autre appareils</ThemedText>
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 36, gap: 12 }}>
-                {Array.from({ length: 4 }).map((a, index) => (
-                    <DeviceItem type="PC" name="HP EliteBook 1030 G2" statut="Offline" key={index} />
+            {otherDevices && <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 36, gap: 12 }}>
+                {otherDevices?.map((device, index) => (
+                    <DeviceItem
+                        type="PC"
+                        name={device.deviceName ?? "Unknown"}
+                        statut={isCurrentDevice === device.deviceName ? "Online" : "Offline"}
+                        key={index}
+                    />
                 ))}
-            </ScrollView>
+            </ScrollView>}
         </View>
         <BottomSheetModal
             ref={bottomSheetModalRef}
@@ -209,12 +263,12 @@ function DeviceItem({ type, name, statut }: DeviceItemProps) {
             </NativeView>
             <NativeView>
                 <ThemedText className="font-bold text-lg opacity-80">{name}</ThemedText>
-                <ThemedText
+                {statut && <ThemedText
                     className="text-sm font-semibold"
                     style={{ color: isOnline ? SyncColor["OK"] : SyncColor["NO"] }}
                 >
                     {isOnline ? "En ligne" : "Déconnecté"}
-                </ThemedText>
+                </ThemedText>}
             </NativeView>
         </NativeView>
     </TouchableOpacity>

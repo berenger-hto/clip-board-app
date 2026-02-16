@@ -1,35 +1,39 @@
-import { ClientData } from "@/types/types"
+import { ClientData, MobileDevice, OS } from "@/types/types"
 import { useMutation } from "@tanstack/react-query"
-import { useToast } from "react-native-toast-notifications"
-
-type DefaultResponse = {
-    success: boolean
-    message: string
-}
-
-const defaultResponse = {
-    success: false,
-    message: "Une erreur s'est produite"
-} satisfies DefaultResponse
+import { DefaultResponse } from "@/types/types"
+import { useEffect, useState } from "react"
+import { useSecureStore } from "./useSecureStore"
 
 const PORT = 9876
 
 type API = {
-    "v1/auth/me": DefaultResponse & {
-        os: {
-            deviceName?: string
-            username?: string
-            platform?: string
-        }
+    "v1/me": DefaultResponse & {
+        os: OS
     }
 }
 
-export function useMutationQuery<T extends keyof API>(path: T) {
-    const toast = useToast()
+type MutationData = {
+    "v1/me": ClientData & MobileDevice
+}
+
+export function useMutationQuery<T extends keyof API>(path: T, onError?: () => void) {
+    const [ip, setIp] = useState<string | null>(null)
+    const { getValue } = useSecureStore()
+
+    useEffect(() => {
+        const load = async () => {
+            const savedIp = await getValue("ip")
+            setIp(savedIp ?? "127.0.0.1")
+            console.log("Mutation ip", savedIp)
+        }
+        load()
+    }, [])
+
     return useMutation({
         mutationKey: [path],
-        mutationFn: async (mutateData: ClientData) => {
-            const response = await fetch(`http://${mutateData.ip}:${PORT}/${path}`, {
+        mutationFn: async (mutateData: MutationData[T]) => {
+            const currentIp = path === "v1/me" ? (mutateData as any).ip : ip
+            const response = await fetch(`http://${currentIp}:${PORT}/${path}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -45,10 +49,6 @@ export function useMutationQuery<T extends keyof API>(path: T) {
 
             return data
         },
-        onError: () => {
-            toast.show("Connexion échouée !", {
-                type: "danger"
-            })
-        }
+        onError
     })
 }

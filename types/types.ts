@@ -12,3 +12,20 @@ export type ClientData = {
     token?: string
     expiresAt?: number
 }
+
+export type DefaultResponse = {
+    success: boolean
+    message: string
+}
+
+export type OS = {
+    deviceName?: string
+    username?: string
+    platform?: string
+}
+
+export type MobileDevice = {
+    deviceName: string
+    deviceOSName: string
+    deviceOSVersion: string
+}

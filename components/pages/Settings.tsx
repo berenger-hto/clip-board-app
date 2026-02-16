@@ -1,11 +1,12 @@
 import { Input } from "@/components/forms/Input";
 import { ThemedText } from "@/components/ThemedText";
 import { View } from "@/components/View";
+import { useSecureStore } from "@/hooks/useSecureStore";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Slider from "@react-native-community/slider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text as NativeText, View as NativeView, Pressable, Switch, TextProps } from "react-native";
 
 type PreferenceType = {
@@ -36,6 +37,23 @@ export function Settings() {
     const [sliderValue, setSliderValue] = useState(1)
     const { colors } = useThemeColor()
     const [url, setUrl] = useState("http://192.168.1.107")
+    const { getValue, setValue: setSecureValue } = useSecureStore()
+
+    useEffect(() => {
+        async function loadSettings() {
+            const savedIp = await getValue("ip")
+            if (savedIp) {
+                setUrl("http://" + savedIp)
+            }
+        }
+        loadSettings()
+    }, [])
+
+    const handleChangeUrl = (url: string) => {
+        setUrl(url)
+        setSecureValue("ip", url.replace("http://", ""))
+    }
+
 
     return <View>
         <ThemedText className="text-3xl font-bold">Paramètres</ThemedText>
@@ -44,7 +62,7 @@ export function Settings() {
             <Input
                 label="URL Serveur"
                 value={url}
-                onChangeText={(url) => setUrl(url)}
+                onChangeText={(url) => handleChangeUrl(url)}
                 placeholder="ex: http://192.168.0.123"
             />
         </View>
