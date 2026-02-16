@@ -64,6 +64,8 @@ export function Settings() {
                 value={url}
                 onChangeText={(url) => handleChangeUrl(url)}
                 placeholder="ex: http://192.168.0.123"
+                editable={false}
+                className="opacity-75"
             />
         </View>
         <View className="mt-8">
