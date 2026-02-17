@@ -36,7 +36,7 @@ export function Settings() {
     const onValueChange = () => setValue(prevState => !prevState)
     const [sliderValue, setSliderValue] = useState(1)
     const { colors } = useThemeColor()
-    const [url, setUrl] = useState("http://192.168.1.107")
+    const [url, setUrl] = useState("http://127.0.0.1")
     const { getValue, setValue: setSecureValue } = useSecureStore()
 
     useEffect(() => {

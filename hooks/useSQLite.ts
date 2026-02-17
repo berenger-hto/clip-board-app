@@ -1,52 +1,13 @@
 import * as SQLite from 'expo-sqlite';
-import React, { useEffect, useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useToast } from 'react-native-toast-notifications';
 import { OS } from '@/types/types';
 
 export function useSQLite() {
-    const [db, setDb] = useState<SQLite.SQLiteDatabase | null>(null)
-    const [dbReady, setDbReady] = useState(false)
+    const db = SQLite.useSQLiteContext();
     const toast = useToast()
 
-    useEffect(() => {
-        async function setup() {
-            try {
-                const database = await SQLite.openDatabaseAsync("clipboard.db")
-
-                await database.execAsync(`
-                    PRAGMA journal_mode = WAL;
-                    CREATE TABLE IF NOT EXISTS devices (
-                        id INTEGER PRIMARY KEY NOT NULL, 
-                        deviceName TEXT NOT NULL, 
-                        username TEXT NOT NULL,
-                        platform TEXT DEFAULT 'TEXT',
-                        createdAt BIGINT
-                    );
-
-                    CREATE TABLE IF NOT EXISTS history (
-                        id INTEGER PRIMARY KEY NOT NULL,
-                        value TEXT NOT NULL,
-                        type TEXT NOT NULL,
-                        source TEXT NOT NULL,
-                        createdAt BIGINT
-                    );
-                `)
-
-                setDb(database)
-                setDbReady(true)
-            } catch (error) {
-                console.error("Erreur SQLite :", error)
-                toast.show("Base de donnée inconnue", {
-                    type: "danger"
-                })
-            }
-        }
-
-        setup()
-    }, [])
-
     const getDevices = useCallback(async () => {
-        if (!db) return [];
         try {
             const result = await db.getAllAsync<OS & { createdAt: string, id: number }>('SELECT * FROM devices')
             console.log("Result", result)
@@ -61,7 +22,7 @@ export function useSQLite() {
     }, [db, toast])
 
     const addDevice = useCallback(async (deviceName: string | undefined, username: string | undefined, platform: string | undefined) => {
-        if (!deviceName || !username || !platform || !db) return
+        if (!deviceName || !username || !platform) return
         const devices = await getDevices()
         if (devices) {
             const exist = devices.find(os => os.username === username && os.platform === platform && os.deviceName === deviceName)
@@ -85,5 +46,5 @@ export function useSQLite() {
         }
     }, [db, getDevices, toast])
 
-    return { addDevice, getDevices, dbReady }
+    return { addDevice, getDevices, dbReady: true }
 }

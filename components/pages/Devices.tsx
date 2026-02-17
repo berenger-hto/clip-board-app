@@ -20,7 +20,8 @@ import { useDeviceManagement } from "@/hooks/useDeviceManagement";
 type DeviceItemProps = {
     type: Data["source"]
     name: string
-    statut: "Online" | "Offline" | undefined
+    statut?: "Online" | "Offline"
+    noBorder?: boolean
 }
 
 /**
@@ -99,6 +100,7 @@ export function Devices() {
                                 type="PC"
                                 name={device.deviceName ?? "Unknown"}
                                 statut={isCurrentDevice === device.deviceName ? "Online" : "Offline"}
+                                noBorder
                                 key={index}
                             />
                         ))}
@@ -157,7 +159,7 @@ export function Devices() {
 /**
  * Composant pour afficher un seul élément d'appareil dans la liste.
  */
-function DeviceItem({ type, name, statut }: DeviceItemProps) {
+function DeviceItem({ type, name, statut, noBorder }: DeviceItemProps) {
     const { colors } = useThemeColor()
     const iconName = type === "Mobile" ? "smartphone" : "monitor"
     const isOnline = statut === "Online"
@@ -166,7 +168,7 @@ function DeviceItem({ type, name, statut }: DeviceItemProps) {
         <TouchableOpacity
             style={{
                 borderColor: isOnline ? colors.tagSourceBorderColor : "",
-                borderWidth: isOnline ? 3 : 0,
+                borderWidth: (isOnline && !noBorder) ? 2 : 0,
                 backgroundColor: colors.box
             }}
             activeOpacity={isOnline ? 1 : .7}

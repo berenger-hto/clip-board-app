@@ -24,6 +24,7 @@ export function useDeviceManagement() {
     const { setValue } = useSecureStore()
     const [otherDevices, setOtherDevices] = useState<OS[] | null>(null)
     const [isCurrentDevice, setIsCurrentDevice] = useState<string | null>(null)
+    const setIsRedirect = useAppStore(state => state.setIsRedirect)
 
     // Mutation pour enregistrer cet appareil auprès du serveur d'un autre appareil
     const { mutate, isSuccess, data: responseData } = useMutationQuery("v1/me", () => {
@@ -73,12 +74,8 @@ export function useDeviceManagement() {
                 addDevice(responseData.os.deviceName, responseData.os.username, responseData.os.platform)
                     .then(() => {
                         loadDevices()
+                        setIsRedirect(true)
                         setTabActiveIndex(0)
-                        toast.show("Synchronisation en cours", {
-                            data: {
-                                title: "sync"
-                            }
-                        })
                     })
             }
         }

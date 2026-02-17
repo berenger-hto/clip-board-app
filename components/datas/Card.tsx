@@ -35,18 +35,18 @@ export function Card({data, className, style, ...rest}: Props) {
             className={clsx(`p-4 rounded-xl border ${isDark ? "border-slate-800" : "border-slate-200"}`, className)}
             {...rest}
         >
-            {/* Card CardPreviewHeader */}
+            {/* CardPreviewHeader */}
             <View className="flex flex-row items-center justify-between">
                 <View className="flex flex-row gap-4">
                     <Tag type={type}/>
                     <From source={source} color={headerTextColor} />
                 </View>
-                <Text className="text-[10px]" style={{color: headerTextColor}}>{createdAt}</Text>
+                <Text className="text-[10px]" style={{color: headerTextColor}}>{new Date(createdAt).toLocaleString()}</Text>
             </View>
 
             {/*Card body*/}
             <View className="mt-4">
-                <DataObj data={value.slice(0, 300)} type={type} />
+                <DataObj data={value?.slice(0, 300)} type={type} />
             </View>
 
             {/*Card Footer*/}

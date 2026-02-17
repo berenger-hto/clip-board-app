@@ -4,11 +4,13 @@ import {combine} from "zustand/middleware";
 export const useAppStore = create(
     combine(
         {
-            tabActiveIndex: 0
+            tabActiveIndex: 0,
+            isRedirect: false
         },
         (set) => (
             {
-                setTabActiveIndex: (index: number) => set({ tabActiveIndex: index })
+                setTabActiveIndex: (index: number) => set({ tabActiveIndex: index }),
+                setIsRedirect: (isRedirect: boolean) => set({ isRedirect })
             }
         )
     )
