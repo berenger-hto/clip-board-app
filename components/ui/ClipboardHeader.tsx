@@ -8,12 +8,13 @@ import {FilterButtons} from "@/components/ui/FilterButtons";
 import {useState} from "react";
 import {SyncColor} from "@/constants/Colors";
 import {useAppStore} from "@/store";
+import { useSocketIO } from "@/hooks/useSocketIO";
 
 export function ClipboardHeader() {
     const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
     const {colors} = useThemeColor()
-    const [synchronizeState, setSynchronizeState] = useState<"OK" | "PENDING" | "NO">("OK")
-    const syncState = synchronizeState === "OK" ? "Synchronisé" : synchronizeState === "PENDING" ? "En cours" : "Non synchronisé"
+    const { isConnected } = useSocketIO()
+    const syncState = isConnected ? "Synchronisé" : "Non synchronisé"
 
     return <>
         <View className="items-center flex-row justify-between">
@@ -27,7 +28,7 @@ export function ClipboardHeader() {
             </Pressable>
         </View>
         <View className="mb-4 flex flex-row gap-2 items-center">
-            <NativeView className="h-2 w-2 rounded-full" style={{backgroundColor: SyncColor[synchronizeState]}}/>
+            <NativeView className="h-2 w-2 rounded-full" style={{backgroundColor: SyncColor[isConnected ? "OK" : "NO"]}}/>
             <ThemedText className="text-sm">
                 {syncState}
             </ThemedText>

@@ -1,18 +1,22 @@
 import { ClipboardHeader } from "@/components/ui/ClipboardHeader";
-import { Keyboard, Pressable, ScrollView, View } from "react-native";
-import { Card } from "@/components/datas/Card";
+import { ActivityIndicator } from "react-native";
+import { ClipboardCard } from "@/components/datas/ClipboardCard";
 import { AddItemToClipboard } from "@/components/ui/AddItemToClipboard";
 import { useEffect } from "react";
 import { useFetchQuery } from "@/hooks/useFetchQuery";
 import { useToast } from "react-native-toast-notifications";
 import { useAppStore } from "@/store";
-import { ThemedText } from "../ThemedText";
+import { ThemedText } from "@/components/ThemedText";
+import { useSocketIO } from "@/hooks/useSocketIO";
+import { FlatList } from "react-native-gesture-handler";
+import { View } from "@/components/View";
 
 export function Clipboard() {
-    const { data, isPending, isSuccess, isError, refetch } = useFetchQuery("v1/clipboard")
+    const { data, isPending, isSuccess, isError, refetch, isRefetching } = useFetchQuery("v1/clipboard")
     const toast = useToast()
     const isRedirect = useAppStore(state => state.isRedirect)
     const setIsRedirect = useAppStore(state => state.setIsRedirect)
+    const { socket } = useSocketIO()
 
     useEffect(() => {
         if (isError) {
@@ -32,30 +36,39 @@ export function Clipboard() {
 
     }, [data, isPending, isSuccess, isError, isRedirect])
 
-    /*
     useEffect(() => {
-        const interval = setInterval(refetch, 1500)
-        return () => clearInterval(interval)
-    }, [])
-    */
+        if (!socket) return
+        socket.on("clipboard", () => {
+            refetch()
+        })
+    }, [socket])
 
     return <>
         <ClipboardHeader />
-        <ScrollView
-            className="flex-1 mt-2 rounded-xl"
-            contentContainerStyle={{ paddingBottom: 20 }}
+        <FlatList
+            data={data?.data}
+            renderItem={({ item }) => <ClipboardCard data={item} />}
+            keyExtractor={item => (item.id).toString()}
+            initialNumToRender={3}
+            ListEmptyComponent={
+                isPending ? (
+                    <ActivityIndicator size="large" />
+                ) : (
+                    <ThemedText className="text-center text-2xl mt-10">
+                        Aucun élément
+                    </ThemedText>
+                )
+            }
+            refreshing={isRefetching}
+            onRefresh={refetch}
+            contentContainerStyle={{
+                paddingVertical: 16,
+            }}
+            ItemSeparatorComponent={() => <View className="h-2" />}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
-        >
-            <Pressable onPress={Keyboard.dismiss}>
-                {isPending && <Load />}
-                {data && <View className="mt-5 gap-4">
-                    {data?.data.map(d => (
-                        <Card data={d} key={d.id} />
-                    ))}
-                </View>}
-            </Pressable>
-        </ScrollView>
+        />
+
         {/*Add item to clipboard*/}
         <AddItemToClipboard />
     </>

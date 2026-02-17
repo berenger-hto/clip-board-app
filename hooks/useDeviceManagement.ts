@@ -54,6 +54,7 @@ export function useDeviceManagement() {
     }, [dbReady, loadDevices])
 
     // Mettre à jour le nom de l'appareil actuel à partir des données récupérées
+    
     useEffect(() => {
         if (deviceData) {
             setIsCurrentDevice(deviceData.os.deviceName ?? null)
