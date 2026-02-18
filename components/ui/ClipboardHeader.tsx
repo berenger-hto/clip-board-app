@@ -23,7 +23,7 @@ export function ClipboardHeader() {
             </ThemedText>
             <Pressable onPress={() => setTabActiveIndex(1)}>
                 <View className="flex items-center justify-center h-10 w-10 rounded-full">
-                    <MaterialIcons name="devices" size={18} color={colors.textPrimary} className="opacity-50" />
+                    <MaterialIcons name="devices" size={22} color={colors.textPrimary} className="opacity-50" />
                 </View>
             </Pressable>
         </View>

@@ -23,7 +23,7 @@ export const ClipboardCard = memo(function ClipboardCard({ data, className, styl
     const { type, createdAt, source, value, id } = data
     const router = useRouter()
 
-    return <Pressable onPress={() => router.push(`/card/${id}`)}>
+    return <Pressable onPress={() => router.push(`/clipboard/${id}`)}>
         <View
             style={[style, {
                 backgroundColor: colors.box,

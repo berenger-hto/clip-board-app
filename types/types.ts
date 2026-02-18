@@ -1,5 +1,5 @@
 export type Data = {
-    id: number
+    id: string
     type: "CODE" | "TEXT" | "URL"
     // La durée en timestamp
     createdAt: number

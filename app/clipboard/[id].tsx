@@ -11,13 +11,14 @@ import {Data} from "@/types/types";
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {Button} from "@/components/forms/Button";
-import {DATA_MOCK} from "@/constants/fakeData";
 import {NotFound} from "@/components/ui/NotFound";
 import {addToClipboard} from "@/functions/addToClipboard";
+import { useClipboardManagement } from "@/hooks/useClipboardManagement";
 
 export default function CardPreview() {
     const { id } = useLocalSearchParams()
-    const data = DATA_MOCK.find(d => d.id === parseInt((id as string), 10))
+    const { clipboardData } = useClipboardManagement()
+    const data = clipboardData?.data.find(d => d.id === id)
     const {colors, isDark} = useThemeColor()
 
     if (!data) return <NotFound />
@@ -37,8 +38,7 @@ export default function CardPreview() {
                         color={colors.tagSourceIconColor}
                     />
                     <ThemedText className="text-sm opacity-80">
-                        {/* Garder le format 12:43 Oct 24, 2023 */}
-                        Crée le: {data.createdAt}
+                        Crée le: {new Date(data.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} {new Date(data.createdAt).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </ThemedText>
                 </View>
                 <View>
