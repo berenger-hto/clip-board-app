@@ -141,7 +141,7 @@ function Preference({ preference, active, setActive }: PreferenceProps) {
             </NativeView>
             <ThemedText className="font-semibold text-lg">{preference.name}</ThemedText>
         </NativeView>
-        <Switch value={active} onValueChange={setActive} thumbColor={active ? colors.primary : colors.switchNotActiveColor} />
+        <Switch value={active} onValueChange={setActive} />
     </Pressable>
 }
 
