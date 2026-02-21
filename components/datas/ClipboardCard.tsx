@@ -12,6 +12,10 @@ import { Button } from "@/components/forms/Button";
 import { useRouter } from "expo-router";
 import { addToClipboard } from "@/functions/addToClipboard";
 import { memo } from "react";
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/fr'
+import { capitalize } from "@/functions/capitalize";
 
 type Props = ViewProps & {
     data: Data
@@ -22,6 +26,7 @@ export const ClipboardCard = memo(function ClipboardCard({ data, className, styl
     const headerTextColor = isDark ? "#94a3b8" : "#64748b"
     const { type, createdAt, source, value, id } = data
     const router = useRouter()
+    dayjs.extend(relativeTime)
 
     return <Pressable onPress={() => router.push(`/clipboard/${id}`)}>
         <View
@@ -42,7 +47,7 @@ export const ClipboardCard = memo(function ClipboardCard({ data, className, styl
                     <Tag type={type} />
                     <From source={source} color={headerTextColor} />
                 </View>
-                <Text className="text-[10px]" style={{ color: headerTextColor }}>{new Date(createdAt).toLocaleString()}</Text>
+                <Text className="text-[10px]" style={{ color: headerTextColor }}>{capitalize(dayjs(createdAt).locale('fr').fromNow())}</Text>
             </View>
 
             {/*Card body*/}
@@ -69,12 +74,12 @@ export const ClipboardCard = memo(function ClipboardCard({ data, className, styl
 })
 
 const Tag = memo(function Tag({ type }: { type: Data['type'] }) {
-    const colorScheme = useColorScheme() ?? "dark"
+    const { isDark } = useThemeColor()
     return <View
-        style={{ backgroundColor: TagColor[colorScheme][type]['background'] }}
+        style={{ backgroundColor: TagColor[isDark ? "dark" : "light"][type]['background'] }}
         className="self-center px-3 py-1 rounded-lg">
         <ThemedText
-            style={{ color: TagColor[colorScheme][type]["color"] }}
+            style={{ color: TagColor[isDark ? "dark" : "light"][type]["color"] }}
             className="text-[10px] font-bold tracking-wider">
             {type}
         </ThemedText>

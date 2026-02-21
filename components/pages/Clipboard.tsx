@@ -1,27 +1,29 @@
 import { ClipboardHeader } from "@/components/ui/ClipboardHeader";
 import { ActivityIndicator, RefreshControl } from "react-native";
 import { ClipboardCard } from "@/components/datas/ClipboardCard";
-import { AddItemToClipboard } from "@/components/ui/AddItemToClipboard";
-import { ThemedText } from "@/components/ThemedText";
-import { FlatList } from "react-native-gesture-handler";
 import { View } from "@/components/View";
 import { useClipboardManagement } from "@/hooks/useClipboardManagement";
-import { Button } from "../forms/Button";
 import { useAppStore } from "@/store";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
+import { useRef, useEffect } from "react";
+import { Data } from "@/types/types";
+import { ThemedText } from "@/components/ThemedText";
+import { Button } from "@/components/forms/Button";
 
 export function Clipboard() {
 
-    const { data, isPending, isRefetching, refetch, token, ip } = useClipboardManagement()
+    const listRef = useRef<FlashListRef<Data> | null>(null)
+    const { data, isPending, isRefetching, refetch, token, ip } = useClipboardManagement(listRef)
     const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
 
     return <>
-        <ClipboardHeader />
         <View style={{ flex: 1 }}>
-            <FlatList
-                data={data}
+            <ClipboardHeader />
+            <FlashList
+                ref={listRef}
+                data={data ?? []}
                 renderItem={({ item }) => <ClipboardCard data={item} />}
-                keyExtractor={item => item.id}
-                initialNumToRender={3}
+                keyExtractor={(item) => item.id}
                 ListEmptyComponent={
                     (token && ip && isPending) ? (
                         <ActivityIndicator size="large" />
@@ -35,7 +37,7 @@ export function Clipboard() {
                     )
                 }
                 refreshControl={
-                    <RefreshControl 
+                    <RefreshControl
                         refreshing={isRefetching}
                         onRefresh={refetch}
                     />
@@ -43,18 +45,10 @@ export function Clipboard() {
                 contentContainerStyle={{
                     paddingVertical: 6,
                     paddingBottom: 20,
-                    flexGrow: 1
                 }}
-                ItemSeparatorComponent={() => <View className="h-2" />}
-                showsHorizontalScrollIndicator={false}
+                ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
                 showsVerticalScrollIndicator={false}
-                alwaysBounceVertical={true}
-                overScrollMode="always"
-                nestedScrollEnabled={true}
             />
         </View>
-
-        {/*Add item to clipboard*/}
-        <AddItemToClipboard />
     </>
 }

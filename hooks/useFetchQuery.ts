@@ -29,13 +29,6 @@ export function useFetchQuery<T extends keyof API>(path: T, options?: RequestIni
 
     }, [])
 
-    const manageCache = path === "v1/clipboard" ? {
-        staleTime: 1000 * 60 * 5,
-        gcTime: 1000 * 60 * 30,
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-    } : {}
-
     return useQuery({
         queryKey: [path],
         queryFn: async () => {
@@ -43,14 +36,13 @@ export function useFetchQuery<T extends keyof API>(path: T, options?: RequestIni
                 ...options,
                 headers: {
                     "Accept": "application/json",
-                    "Authorization": path === "v1/clipboard" ? token ?? "" : "",
+                    "Authorization": token ?? "",
                     ...options?.headers
                 }
             })
             const data = await response.json()
             return data as API[T]
-        }, 
-        ...manageCache
+        }
     })
 
 }

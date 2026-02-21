@@ -1,20 +1,20 @@
 export const Colors = {
     dark: {
         primary: "#8B5CF6",
-        background: "#101c22",
-        card: "#0a1215",
-        textPrimary: "#eee",
-        box: "#1c2327",
-        iconColor: "#ccc",
-        navColor: "rgba(16,28,34,0.84)",
-        borderNavColor: "#444",
-        shadowNavColor: "#444",
-        tagSourceBackground: "#1e293b",
-        tagSourceColor: "#cbd5e1",
-        tagSourceIconColor: "#94a3b8",
-        tagSourceBorderColor: "#1e293b",
-        switchNotActiveColor: "rgba(139,92,246,0.8)",
-        segmentedButtonsContainerBackground: "#283339",
+        background: "#09090b",
+        card: "#121214",
+        textPrimary: "#f4f4f5",
+        box: "#18181b",
+        iconColor: "#a1a1aa",
+        navColor: "rgba(9, 9, 11, 0.85)",
+        borderNavColor: "#18181b",
+        shadowNavColor: "rgba(0, 0, 0, 0.5)",
+        tagSourceBackground: "#121214",
+        tagSourceColor: "#e4e4e7",
+        tagSourceIconColor: "#a1a1aa",
+        tagSourceBorderColor: "#18181b",
+        switchNotActiveColor: "#27272a",
+        segmentedButtonsContainerBackground: "#121214",
     },
     light: {
         primary: "#8B5CF6",
@@ -38,16 +38,16 @@ export const Colors = {
 export const TagColor = {
     dark: {
         URL: {
-            background: "rgb(30 58 138 / 0.3)",
+            background: "rgba(59, 130, 246, 0.15)",
             color: "#60a5fa"
         },
         CODE: {
-            background: "rgb(88 28 135 / 0.3)",
+            background: "rgba(168, 85, 247, 0.15)",
             color: "#c084fc"
         },
         TEXT: {
-            background: "#1e293b",
-            color: "#94a3b8"
+            background: "rgba(161, 161, 170, 0.15)",
+            color: "#a1a1aa"
         }
     },
     light: {

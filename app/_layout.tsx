@@ -54,7 +54,7 @@ export default function RootLayout() {
                             }}>
                                 <Stack.Screen name="index" />
                                 <Stack.Screen
-                                    name="card/[id]"
+                                    name="clipboard/[id]"
                                     options={{
                                         animation: 'fade_from_bottom',
                                         presentation: 'modal'

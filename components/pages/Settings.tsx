@@ -7,11 +7,12 @@ import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Slider from "@react-native-community/slider";
 import { useEffect, useState } from "react";
-import { Text as NativeText, View as NativeView, Pressable, Switch, TextProps } from "react-native";
+import { Text as NativeText, View as NativeView, Pressable, Switch, TextProps, useColorScheme } from "react-native";
+import { useAppStore } from "@/store";
 
 type PreferenceType = {
     name: string
-    iconName: "refresh-cw" | "bell" | "lock"
+    iconName: "refresh-cw" | "bell" | "lock" | "moon"
 }
 
 type PreferenceProps = {
@@ -27,17 +28,22 @@ export function Settings() {
             iconName: "refresh-cw"
         },
         {
-            name: "Notifications",
-            iconName: "bell"
+            name: "Mode sombre",
+            iconName: "moon",
         }
     ]
 
     const [value, setValue] = useState(false)
     const onValueChange = () => setValue(prevState => !prevState)
     const [sliderValue, setSliderValue] = useState(1)
-    const { colors } = useThemeColor()
+    const { colors, isDark } = useThemeColor()
     const [url, setUrl] = useState("http://127.0.0.1")
     const { getValue, setValue: setSecureValue } = useSecureStore()
+    const appTheme = useAppStore(state => state.appTheme)
+    const setAppTheme = useAppStore(state => state.setAppTheme)
+    const autoSync = useAppStore(state => state.autoSync)
+    const setAutoSync = useAppStore(state => state.setAutoSync)
+
 
     useEffect(() => {
         async function loadSettings() {
@@ -53,7 +59,6 @@ export function Settings() {
         setUrl(url)
         setSecureValue("ip", url.replace("http://", ""))
     }
-
 
     return <View>
         <ThemedText className="text-3xl font-bold">Paramètres</ThemedText>
@@ -71,14 +76,16 @@ export function Settings() {
         <View className="mt-8">
             <Text className="uppercase font-bold mb-4 text-sm">Préférences générales</Text>
             <View>
-                {preferences.map((p, index) => (
-                    <Preference
-                        preference={p}
-                        active={value}
-                        setActive={onValueChange}
-                        key={index}
-                    />
-                ))}
+                <Preference
+                    preference={preferences[0]}
+                    active={autoSync}
+                    setActive={() => setAutoSync(!autoSync)}
+                />
+                <Preference
+                    preference={preferences[1]}
+                    active={appTheme ? appTheme === "dark" : isDark}
+                    setActive={() => setAppTheme(appTheme && appTheme === "dark" ? "light" : "dark")}
+                />
             </View>
         </View>
         <View className="mt-8">
