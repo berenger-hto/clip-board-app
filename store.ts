@@ -6,14 +6,14 @@ export const useAppStore = create(
         {
             tabActiveIndex: 0,
             isRedirect: false,
-            appTheme: null as "dark" | "light" | null,
+            appTheme: "dark" as "dark" | "light",
             autoSync: true
         },
         (set) => (
             {
                 setTabActiveIndex: (index: number) => set({ tabActiveIndex: index }),
                 setIsRedirect: (isRedirect: boolean) => set({ isRedirect }),
-                setAppTheme: (theme: "dark" | "light" | null) => set({ appTheme: theme }),
+                setAppTheme: (appTheme: "dark" | "light") => set({ appTheme }),
                 setAutoSync: (autoSync: boolean) => set({ autoSync }) 
             }
         )

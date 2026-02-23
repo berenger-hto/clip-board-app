@@ -142,10 +142,13 @@ export function Devices() {
                             name="scan-outline"
                             size={300}
                             style={{
+                                flex: 1,
+                                justifyContent: "center",   
+                                alignItems: "center",
+                                opacity: .7,
                                 position: "absolute",
                                 top: 210,
-                                left: 18,
-                                opacity: .7
+                                left: 18
                             }}
                             color={colors.primary}
                         />

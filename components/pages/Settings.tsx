@@ -6,9 +6,10 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Slider from "@react-native-community/slider";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text as NativeText, View as NativeView, Pressable, Switch, TextProps, useColorScheme } from "react-native";
 import { useAppStore } from "@/store";
+import { useToast } from "react-native-toast-notifications";
 
 type PreferenceType = {
     name: string
@@ -33,8 +34,9 @@ export function Settings() {
         }
     ]
 
-    const [value, setValue] = useState(false)
-    const onValueChange = () => setValue(prevState => !prevState)
+    const [biometric, setBiometric] = useState(false)
+    const biometricMessage = useRef<boolean>(false)
+    const onBiometricChange = () => setBiometric(prevState => !prevState)
     const [sliderValue, setSliderValue] = useState(1)
     const { colors, isDark } = useThemeColor()
     const [url, setUrl] = useState("http://127.0.0.1")
@@ -43,6 +45,16 @@ export function Settings() {
     const setAppTheme = useAppStore(state => state.setAppTheme)
     const autoSync = useAppStore(state => state.autoSync)
     const setAutoSync = useAppStore(state => state.setAutoSync)
+    const toast = useToast()
+
+    useEffect(() => {
+        if (!biometricMessage.current && biometric) {
+            toast.show("Bientôt disponible", {
+                type: "info"
+            })
+            biometricMessage.current = true
+        }
+    }, [biometric])
 
 
     useEffect(() => {
@@ -127,8 +139,8 @@ export function Settings() {
                         iconName: "lock"
                     }
                 }
-                active={value}
-                setActive={onValueChange}
+                active={biometric}
+                setActive={onBiometricChange}
             />
         </View>
     </View>

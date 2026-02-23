@@ -13,7 +13,7 @@ type Props = {
 export function ToastCard({ toastOptions }: Props) {
     const {colors} = useThemeColor()
     const { type, message, data } = toastOptions
-    const iconName = type === "success" ? "check-circle" : type === "danger" ? "error" : type === "warning" ? "warning" : "info"
+    const iconName = type === "success" ? "check-circle" : type === "danger" ? "error" : type === "warning" ? "dnd-forwardslash" : "info"
     const rotation = useSharedValue(0)
 
     useEffect(() => {

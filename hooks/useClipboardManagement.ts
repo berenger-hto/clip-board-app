@@ -26,12 +26,12 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
 
     const scrollTopToRefetch = useCallback(() => {
         if (listRef.current && data && data.length > 0) {
-            requestAnimationFrame(() => {
+            setTimeout(() => {
                 listRef.current?.scrollToIndex({
                     index: 0,
                     animated: true
                 })
-            })
+            }, 100)
         }
     }, [data])
 
@@ -77,7 +77,6 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
         }
     }, [socket, autoSync, refetch])
 
-    // Wait for the new data to be available before scrolling
     useEffect(() => {
         if (shouldScroll.current && data && data.length > 0 && !isRefetching) {
             scrollTopToRefetch()

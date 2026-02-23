@@ -7,6 +7,7 @@ import {Settings} from "@/components/pages/Settings";
 import {Devices} from "@/components/pages/Devices";
 import { useSecureStore } from "@/hooks/useSecureStore";
 import { useEffect } from "react";
+import { useToast } from "react-native-toast-notifications";
 
 export default function App() {
     const tabActiveIndex = useAppStore(state => state.tabActiveIndex)
@@ -17,7 +18,6 @@ export default function App() {
         deleteValue("token")
     }, [])
      */
-     
 
     return <SafeAreaView className="p-4 flex-1">
         {
