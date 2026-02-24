@@ -1,8 +1,8 @@
-import {TouchableOpacity, TouchableOpacityProps, View as NativeView} from "react-native";
+import { TouchableOpacity, TouchableOpacityProps, View as NativeView } from "react-native";
 import Feather from '@expo/vector-icons/Feather';
-import {useThemeColor} from "@/hooks/useThemeColor";
-import {ThemedText} from "@/components/ThemedText";
-import {useAppStore} from "@/store";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { ThemedText } from "@/components/ThemedText";
+import { useAppStore } from "@/hooks/useAppStore";
 
 type Tab = {
     name: string
@@ -15,7 +15,7 @@ type TabElementProps = TouchableOpacityProps & {
 }
 
 export function FloatNav() {
-    const {colors} = useThemeColor()
+    const { colors } = useThemeColor()
     const tabElements: Tab[] = [
         {
             name: "Presse-Papier",
@@ -65,18 +65,18 @@ export function FloatNav() {
     </NativeView>
 }
 
-function TabElement({tab, active, ...rest}: TabElementProps) {
-    const {colors, isDark} = useThemeColor()
+function TabElement({ tab, active, ...rest }: TabElementProps) {
+    const { colors, isDark } = useThemeColor()
 
     return <TouchableOpacity
         activeOpacity={.8}
         className="flex-col items-center justify-center"
         {...rest}
     >
-        <Feather name={tab.iconName} size={16} color={active ? colors.primary : isDark ? "#aaa" : "#888"}/>
+        <Feather name={tab.iconName} size={16} color={active ? colors.primary : isDark ? "#aaa" : "#888"} />
         <ThemedText
             className={`text-[10px] font-bold}`}
-            style={{color: active ? colors.primary : isDark ? "#aaa" : "#888", fontWeight: active ? "bold" : "normal"}}
+            style={{ color: active ? colors.primary : isDark ? "#aaa" : "#888", fontWeight: active ? "bold" : "normal" }}
         >
             {tab.name}
         </ThemedText>

@@ -1,13 +1,12 @@
 import "../styles/global.css"
-import {SafeAreaView} from "@/components/SafeAreaView";
-import {FloatNav} from "@/components/ui/FloatNav";
-import {Clipboard} from "@/components/pages/Clipboard";
-import {useAppStore} from "@/store";
-import {Settings} from "@/components/pages/Settings";
-import {Devices} from "@/components/pages/Devices";
+import { SafeAreaView } from "@/components/SafeAreaView";
+import { FloatNav } from "@/components/ui/FloatNav";
+import { Clipboard } from "@/components/pages/Clipboard";
+import { useAppStore } from "@/hooks/useAppStore";
+import { Settings } from "@/components/pages/Settings";
+import { Devices } from "@/components/pages/Devices";
 import { useSecureStore } from "@/hooks/useSecureStore";
 import { useEffect } from "react";
-import { useToast } from "react-native-toast-notifications";
 
 export default function App() {
     const tabActiveIndex = useAppStore(state => state.tabActiveIndex)
@@ -29,7 +28,7 @@ export default function App() {
         }
 
         {/*Float navigation*/}
-        <FloatNav/>
+        <FloatNav />
 
     </SafeAreaView>
 }

@@ -1,4 +1,4 @@
-import { View, type ViewProps, Text, useColorScheme, Alert, Pressable } from "react-native"
+import { View, type ViewProps, Text, Pressable, TouchableOpacity, GestureResponderEvent } from "react-native"
 import { Data } from "@/types/types";
 import { clsx } from "clsx";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -16,6 +16,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/fr'
 import { capitalize } from "@/functions/capitalize";
+import { share } from "@/functions/share";
 
 type Props = ViewProps & {
     data: Data
@@ -26,6 +27,10 @@ export const ClipboardCard = memo(function ClipboardCard({ data, className, styl
     const headerTextColor = isDark ? "#94a3b8" : "#64748b"
     const { type, createdAt, source, value, id } = data
     const router = useRouter()
+    const handleShareItem = (e: GestureResponderEvent) => {
+        e.stopPropagation()
+        share(value)
+    }
     dayjs.extend(relativeTime)
 
     return <Pressable onPress={() => router.push(`/clipboard/${id}`)}>
@@ -57,9 +62,14 @@ export const ClipboardCard = memo(function ClipboardCard({ data, className, styl
 
             {/*Card Footer*/}
             <View className="flex-row justify-between mt-4">
-                <View className="flex flex-row gap-2">
-                    <Button icon={<FontAwesome name="star" size={18} color={colors.iconColor} />}></Button>
-                    <Button icon={<Entypo name="share" size={18} color={colors.iconColor} />}></Button>
+                <View className="flex">
+                    <TouchableOpacity
+                        className="p-2 mt-2"
+                        onPress={handleShareItem}
+                        activeOpacity={.8}
+                    >
+                        <Entypo name="share" size={20} color={colors.iconColor} />
+                    </TouchableOpacity>
                 </View>
                 <Button
                     active

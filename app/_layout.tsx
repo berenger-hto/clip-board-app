@@ -6,6 +6,10 @@ import { ToastProvider } from "react-native-toast-notifications";
 import { ToastCard } from "@/components/ui/ToastCard";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import * as SQLite from 'expo-sqlite';
+import { useEffect } from "react";
+import { useAppStore } from "@/hooks/useAppStore";
+import { useSecureStore } from "@/hooks/useSecureStore";
+import { useColorScheme } from "react-native";
 
 const queryClient = new QueryClient()
 
@@ -30,6 +34,31 @@ async function migrateDbIfNeeded(db: SQLite.SQLiteDatabase) {
     `)
 }
 
+function InitializeApp() {
+    const setIp = useAppStore(state => state.setIp)
+    const setToken = useAppStore(state => state.setToken)
+    const setAppTheme = useAppStore(state => state.setAppTheme)
+    const { getValue } = useSecureStore()
+    const colorScheme = useColorScheme() ?? "dark"
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                const savedIp = await getValue("ip")
+                const savedToken = await getValue("token")
+                setIp(savedIp)
+                setToken(savedToken)
+                setAppTheme(colorScheme)
+            } catch (error) {
+                console.error("Erreur lors de l'initialisation du store:", error)
+            }
+        }
+        load()
+    }, [colorScheme])
+
+    return null
+}
+
 export default function RootLayout() {
     return <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
@@ -47,6 +76,7 @@ export default function RootLayout() {
                 <GestureHandlerRootView style={{ flex: 1, backgroundColor: "transparent" }}>
                     <BottomSheetModalProvider>
                         <SQLite.SQLiteProvider databaseName="clipboard.db" onInit={migrateDbIfNeeded}>
+                            <InitializeApp />
                             <Stack screenOptions={{
                                 headerShown: false,
                                 animation: 'slide_from_right',

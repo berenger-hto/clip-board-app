@@ -7,12 +7,12 @@ import {useThemeColor} from "@/hooks/useThemeColor";
 import {View} from "@/components/View"
 
 type Props = {
-    notFoundTitle?: string,
-    notFoundDescription?: string
+    title?: string,
+    description?: string
     handleGoBack?: () => void
 }
 
-export function NotFound({ notFoundTitle, notFoundDescription, handleGoBack }: Props) {
+export function NotFound({ title, description, handleGoBack }: Props) {
     const router = useRouter()
     const { colors } = useThemeColor()
 
@@ -24,9 +24,9 @@ export function NotFound({ notFoundTitle, notFoundDescription, handleGoBack }: P
             transition={400}
         />
         <View className="mt-4 gap-3">
-            <ThemedText className="text-2xl font-bold text-center">{notFoundTitle ? notFoundTitle : "Oops !"}</ThemedText>
+            <ThemedText className="text-2xl font-bold text-center">{title ? title : "Oops !"}</ThemedText>
             <ThemedText className="text-center font-xl" style={{color: colors.tagSourceColor}}>
-                {notFoundDescription ? notFoundDescription : "Cette donnée n'existe plus dans le presse-papier synchronisé !"}
+                {description ? description : "Cette donnée n'existe plus dans le presse-papier."}
             </ThemedText>
             <Button active onPress={handleGoBack ? handleGoBack : () => router.push("/")}>Retour</Button>
         </View>

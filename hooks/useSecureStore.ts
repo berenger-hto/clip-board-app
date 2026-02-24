@@ -1,9 +1,11 @@
 import * as SecureStore from 'expo-secure-store';
-import { useEffect, useState } from 'react';
 import { useToast } from 'react-native-toast-notifications';
+import { useAppStore } from './useAppStore';
 
 export function useSecureStore() {
     const toast = useToast()
+    const setIp = useAppStore(state => state.setIp)
+    const setToken = useAppStore(state => state.setToken)
 
     /**
      * Enregistre une valeur de manière sécurisée.
@@ -11,6 +13,8 @@ export function useSecureStore() {
     const setValue = async (key: string, value: string) => {
         try {
             await SecureStore.setItemAsync(key, value)
+            if (key === "ip") setIp(value)
+            if (key === "token") setToken(value)
         } catch (error) {
             console.error(`Erreur SecureStore (save ${key}) :`, error)
             toast.show("Erreur de sauvegarde", {
@@ -40,6 +44,8 @@ export function useSecureStore() {
     const deleteValue = async (key: string) => {
         try {
             await SecureStore.deleteItemAsync(key)
+            if (key === "ip") setIp(null)
+            if (key === "token") setToken(null)
         } catch (error) {
             console.error(`Erreur SecureStore (delete ${key}) :`, error)
             toast.show("Erreur de suppression", {

@@ -2,12 +2,13 @@ import { useState, useCallback, useEffect } from "react";
 import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
 import * as Device from 'expo-device';
-import { OS } from "@/types/types";
+import { MobileDevice, OS } from "@/types/types";
 import { useSQLite } from "@/hooks/useSQLite";
 import { useSecureStore } from "@/hooks/useSecureStore";
 import { useMutationQuery } from "@/hooks/useMutationQuery";
 import { useFetchQuery } from "@/hooks/useFetchQuery";
-import { useAppStore } from "@/store";
+import { useAppStore } from "@/hooks/useAppStore";
+import { useBottomSheetModal } from "@gorhom/bottom-sheet";
 
 const clientDataSchema = z.object({
     ip: z.ipv4(),
@@ -25,14 +26,15 @@ export function useDeviceManagement() {
     const [otherDevices, setOtherDevices] = useState<OS[] | null>(null)
     const [isCurrentDevice, setIsCurrentDevice] = useState<string | null>(null)
     const setIsRedirect = useAppStore(state => state.setIsRedirect)
+    const { dismiss } = useBottomSheetModal()
 
     // Mutation pour enregistrer cet appareil auprès du serveur d'un autre appareil
-    const { mutate, isSuccess, data: responseData } = useMutationQuery("v1/me", () => {
+    const { mutate, isSuccess, data: responseData } = useMutationQuery<{ os: OS }, MobileDevice>("v1/me", "POST", () => {
         toast.show("Connexion échouée !", { type: "danger" })
     })
 
     // Requête pour vérifier le statut de l'appareil actuel auprès du serveur connecté
-    const { data: deviceData } = useFetchQuery("v1/device")
+    const { data: deviceData } = useFetchQuery<{ os: OS }>("v1/device")
 
     const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
 
@@ -92,6 +94,7 @@ export function useDeviceManagement() {
 
             if (!result.success) {
                 toast.show("QR Code invalide", { type: "danger" })
+                dismiss()
                 return
             }
 
@@ -110,6 +113,7 @@ export function useDeviceManagement() {
             onValid()
         } catch {
             toast.show("QR Code invalide", { type: "danger" })
+            dismiss()
         }
     }, [mutate, setValue, toast])
 

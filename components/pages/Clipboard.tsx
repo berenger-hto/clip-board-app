@@ -3,9 +3,9 @@ import { ActivityIndicator, RefreshControl } from "react-native";
 import { ClipboardCard } from "@/components/datas/ClipboardCard";
 import { View } from "@/components/View";
 import { useClipboardManagement } from "@/hooks/useClipboardManagement";
-import { useAppStore } from "@/store";
+import { useAppStore } from "@/hooks/useAppStore";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { Data } from "@/types/types";
 import { ThemedText } from "@/components/ThemedText";
 import { Button } from "@/components/forms/Button";
@@ -13,7 +13,7 @@ import { Button } from "@/components/forms/Button";
 export function Clipboard() {
 
     const listRef = useRef<FlashListRef<Data> | null>(null)
-    const { data, isPending, isRefetching, refetch, token, ip } = useClipboardManagement(listRef)
+    const { data, isPending, isRefetching, refetch, token, ip, scrollTopToRefetch, clipboardData } = useClipboardManagement(listRef)
     const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
 
     return <>
@@ -39,7 +39,12 @@ export function Clipboard() {
                 refreshControl={
                     <RefreshControl
                         refreshing={isRefetching}
-                        onRefresh={refetch}
+                        onRefresh={async () => {
+                            await refetch()
+                            if (data && data.length > 0 && !isRefetching) {
+                                scrollTopToRefetch(1000)
+                            }
+                        }}
                     />
                 }
                 contentContainerStyle={{

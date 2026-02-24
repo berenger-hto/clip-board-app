@@ -1,15 +1,13 @@
 import { Input } from "@/components/forms/Input";
 import { ThemedText } from "@/components/ThemedText";
 import { View } from "@/components/View";
-import { useSecureStore } from "@/hooks/useSecureStore";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Slider from "@react-native-community/slider";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Text as NativeText, View as NativeView, Pressable, Switch, TextProps, useColorScheme } from "react-native";
-import { useAppStore } from "@/store";
-import { useToast } from "react-native-toast-notifications";
+import { useAppStore } from "@/hooks/useAppStore";
 
 type PreferenceType = {
     name: string
@@ -34,43 +32,13 @@ export function Settings() {
         }
     ]
 
-    const [biometric, setBiometric] = useState(false)
-    const biometricMessage = useRef<boolean>(false)
-    const onBiometricChange = () => setBiometric(prevState => !prevState)
     const [sliderValue, setSliderValue] = useState(1)
     const { colors, isDark } = useThemeColor()
-    const [url, setUrl] = useState("http://127.0.0.1")
-    const { getValue, setValue: setSecureValue } = useSecureStore()
+    const ip = useAppStore(state => state.ip)
     const appTheme = useAppStore(state => state.appTheme)
     const setAppTheme = useAppStore(state => state.setAppTheme)
     const autoSync = useAppStore(state => state.autoSync)
     const setAutoSync = useAppStore(state => state.setAutoSync)
-    const toast = useToast()
-
-    useEffect(() => {
-        if (!biometricMessage.current && biometric) {
-            toast.show("Bientôt disponible", {
-                type: "info"
-            })
-            biometricMessage.current = true
-        }
-    }, [biometric])
-
-
-    useEffect(() => {
-        async function loadSettings() {
-            const savedIp = await getValue("ip")
-            if (savedIp) {
-                setUrl("http://" + savedIp)
-            }
-        }
-        loadSettings()
-    }, [])
-
-    const handleChangeUrl = (url: string) => {
-        setUrl(url)
-        setSecureValue("ip", url.replace("http://", ""))
-    }
 
     return <View>
         <ThemedText className="text-3xl font-bold">Paramètres</ThemedText>
@@ -78,8 +46,7 @@ export function Settings() {
             <Text className="uppercase font-bold mb-6 text-sm">Configuration du serveur</Text>
             <Input
                 label="URL Serveur"
-                value={url}
-                onChangeText={(url) => handleChangeUrl(url)}
+                value={`http://${ip ?? "127.0.0.1"}`}
                 placeholder="ex: http://192.168.0.123"
                 editable={false}
                 className="opacity-75"
@@ -130,6 +97,7 @@ export function Settings() {
                 </View>
             </View>
         </View>
+        {/**
         <View className="mt-8">
             <Text className="uppercase font-bold text-sm mb-4">Sécurité</Text>
             <Preference
@@ -143,6 +111,7 @@ export function Settings() {
                 setActive={onBiometricChange}
             />
         </View>
+         */}
     </View>
 }
 
