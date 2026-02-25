@@ -5,7 +5,6 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { FilterButtons } from "@/components/ui/FilterButtons";
-import { useState } from "react";
 import { SyncColor } from "@/constants/Colors";
 import { useAppStore } from "@/hooks/useAppStore";
 import { useSocketIO } from "@/hooks/useSocketIO";

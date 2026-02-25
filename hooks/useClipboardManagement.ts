@@ -8,12 +8,12 @@ import { FlashListRef } from "@shopify/flash-list";
 import { Data } from "@/types/types";
 
 export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | null>) {
-    const { data: clipboardData, isPending, isSuccess, isError, refetch, isRefetching, isRefetchError } = useFetchQuery<{ data: Data[] }>("v1/clipboard")
+    const { data: clipboardData, isPending, isSuccess, isError, refetch, isRefetching, isRefetchError } = useFetchQuery<{ data: Data[] }>("clipboard")
     const toast = useToast()
     const isRedirect = useAppStore(state => state.isRedirect)
     const setIsRedirect = useAppStore(state => state.setIsRedirect)
     const queryClient = useQueryClient()
-    const { socket } = useSocketIO()
+    const { socket, isConnected } = useSocketIO()
 
     const token = useAppStore(state => state.token)
     const ip = useAppStore(state => state.ip)
@@ -47,7 +47,7 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
         setIsRedirect(false)
 
         if (clipboardData && isSuccess) {
-            if (!clipboardData.success) queryClient.invalidateQueries({ queryKey: ["v1/clipboard"] })
+            if (!clipboardData.success) queryClient.invalidateQueries({ queryKey: ["clipboard"] })
             toast.show(clipboardData.message, {
                 type: clipboardData.success ? "success" : "danger"
             })
@@ -69,6 +69,12 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
             socket.off("clipboard", handleClipboard)
         }
     }, [socket, autoSync, refetch])
+
+    useEffect(() => {
+        if (!isConnected) return
+        refetch()
+        scrollTopToRefetch(1000)
+    }, [isConnected])
 
     useEffect(() => {
         if (shouldScroll.current && data && data.length > 0 && !isRefetching) {

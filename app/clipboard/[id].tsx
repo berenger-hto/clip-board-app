@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { SafeAreaView } from "@/components/SafeAreaView";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { CardPreviewHeader } from "@/components/ui/CardPreview/CardPreviewHeader";
 import { View } from "@/components/View";
 import { View as NativeView, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native"
@@ -14,23 +14,72 @@ import { Button } from "@/components/forms/Button";
 import { NotFound } from "@/components/ui/NotFound";
 import { addToClipboard } from "@/functions/addToClipboard";
 import { useFetchQuery } from "@/hooks/useFetchQuery";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useToast } from "react-native-toast-notifications";
+import { useMutationQuery } from "@/hooks/useMutationQuery";
+import { BottomSheetModal, type BottomSheetModalMethods } from "@/components/ui/BottomSheetModal";
+import type { DefaultResponse, SegmentedButtonType } from "@/types/types";
+import { useQueryClient } from "@tanstack/react-query";
+import { useBottomSheetModal } from "@gorhom/bottom-sheet";
 
 export default function CardPreview() {
     const { id } = useLocalSearchParams()
-    const { data: clipboardData, isPending, isError } = useFetchQuery<{ data: Data }>(`v1/clipboard/${id}`)
+    const { data: clipboardData, isPending, isError } = useFetchQuery<{ data: Data }>(`clipboard/${id}`)
     const data = clipboardData?.data
     const { colors, isDark } = useThemeColor()
     const toast = useToast()
+    const { mutate: deleteMutate, isPending: isPendingDelete, isError: isErrorDelete, isSuccess: isSucessDelete, data: dataDelete } = useMutationQuery(`clipboard/${id}`, "DELETE")
+    const { mutate: editMutate, isPending: isPendingEdit, isSuccess: isSuccessEdit, isError: isErrorEdit, data: dataEdit } = useMutationQuery<{content: string, type: SegmentedButtonType}, DefaultResponse>(`clipboard/${id}`, "PATCH")
+    const queryClient = useQueryClient()
+    const router = useRouter()
+    const { dismiss } = useBottomSheetModal()
+    const handleDelete = () => {
+        deleteMutate()
+    }
+
+    const modalRef = useRef<BottomSheetModalMethods>(null)
+
+    const handleOpenModal = () => {
+        modalRef.current?.open()
+    }
+    
+    const handleEditClipboard = (content: string, type: SegmentedButtonType) => {
+        editMutate({content, type})     
+    }
 
     useEffect(() => {
-        if (isError) {
-            toast.show("Le logiciel serveur est injoignable", {
+        if (isErrorDelete) {
+            toast.show("Erreur lors de la suppression", {
                 type: "danger"
             })
+            return
         }
-    }, [isError, toast])
+
+        if (isSucessDelete && dataDelete) {
+            toast.show(dataDelete.message, {
+                type: dataDelete.success ? "success" : "warning"
+            })
+            router.push("/")
+        }
+
+    }, [isErrorDelete, dataDelete, toast])
+
+    useEffect(() => {
+        if (isErrorEdit) {
+            toast.show("Erreur lors de la mise à jour", {
+                type: "danger"
+            })
+            return
+        }
+
+        if (isSuccessEdit && dataEdit) {
+            toast.show(dataEdit.message, {
+                type: dataEdit.success ? "success" : "warning"
+            })
+            queryClient.invalidateQueries({ queryKey: [`clipboard/${id}`] })
+            dismiss()
+        }
+    }, [isErrorEdit, dataEdit, toast])
 
     if (isError || (clipboardData && !clipboardData.success)) return <NotFound title="Aucun presse-papier trouvé" />
 
@@ -106,15 +155,18 @@ export default function CardPreview() {
                         <TouchableOpacity
                             style={{ borderColor: colors.tagSourceBorderColor, backgroundColor: colors.tagSourceBackground }}
                             className="flex-row gap-2 items-center justify-center border rounded-xl py-3 px-8 w-[48%]"
-                            activeOpacity={.7}
+                            activeOpacity={.8}
+                            onPress={handleOpenModal}
                         >
                             <Entypo name="pencil" size={18} color={colors.textPrimary} />
                             <ThemedText className="opacity-80 font-bold text-lg">Editer</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{ backgroundColor: colors.background }}
-                            className={`flex-row gap-2 items-center justify-center border rounded-xl py-3 px-8 w-[48%] ${isDark ? "border-red-400/20" : "border-red-500/20"}`}
-                            activeOpacity={.7}
+                            className={`flex-row gap-2 items-center justify-center border rounded-xl py-3 px-8 w-[48%] ${isDark ? "border-red-400/20" : "border-red-500/20"} ${isPendingDelete && "opacity-15"}`}
+                            activeOpacity={isPendingDelete ? .15 : .8}
+                            onPress={handleDelete}
+                            disabled={isPendingDelete}
                         >
                             <Entypo name="trash" size={18} className={`${isDark ? "!text-red-400" : "!text-red-500"}`} />
                             <ThemedText
@@ -122,6 +174,14 @@ export default function CardPreview() {
                         </TouchableOpacity>
                     </View>
                 </View>
+                <BottomSheetModal
+                    ref={modalRef}
+                    title="Editer le contenu"
+                    actionButtonTitle={isPendingEdit ? "En cours..." : "Editer"}
+                    handleAction={handleEditClipboard}
+                    inputValue={data.value}
+                    buttonDisabled={isPendingEdit}
+                />
             </>
         }
     </SafeAreaView>

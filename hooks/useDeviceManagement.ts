@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
 import * as Device from 'expo-device';
-import { MobileDevice, OS } from "@/types/types";
+import { DefaultResponse, MobileDevice, OS } from "@/types/types";
 import { useSQLite } from "@/hooks/useSQLite";
 import { useSecureStore } from "@/hooks/useSecureStore";
 import { useMutationQuery } from "@/hooks/useMutationQuery";
@@ -29,12 +29,12 @@ export function useDeviceManagement() {
     const { dismiss } = useBottomSheetModal()
 
     // Mutation pour enregistrer cet appareil auprès du serveur d'un autre appareil
-    const { mutate, isSuccess, data: responseData } = useMutationQuery<{ os: OS }, MobileDevice>("v1/me", "POST", () => {
+    const { mutate, isSuccess, data: responseData } = useMutationQuery<MobileDevice, DefaultResponse & { os: OS }>("me", "POST", () => {
         toast.show("Connexion échouée !", { type: "danger" })
     })
 
     // Requête pour vérifier le statut de l'appareil actuel auprès du serveur connecté
-    const { data: deviceData } = useFetchQuery<{ os: OS }>("v1/device")
+    const { data: deviceData } = useFetchQuery<{ os: OS }>("device")
 
     const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
 

@@ -4,12 +4,13 @@ import { DefaultResponse } from "@/types/types"
 import { useAppStore } from "./useAppStore"
 
 const PORT = 9876
+const VERSION = "v1"
 
 type MutationData = {
-    "v1/me": ClientData & MobileDevice
+    "/me": ClientData & MobileDevice
 }
 
-export function useMutationQuery<T, M = void>(
+export function useMutationQuery<M = void, T = DefaultResponse>(
     path: string,
     method: "POST" | "PATCH" | "DELETE" = "POST",
     onError?: () => void
@@ -18,9 +19,9 @@ export function useMutationQuery<T, M = void>(
     const token = useAppStore(state => state.token)
 
     return useMutation({
-        mutationKey: [path],
+        mutationKey: [path, method],
         mutationFn: async (mutateData?: M) => {
-            const currentIp = path === "v1/me" ? (mutateData as unknown as MutationData["v1/me"]).ip : ip
+            const currentIp = path === "/me" ? (mutateData as unknown as MutationData["/me"]).ip : ip
             const options: RequestInit = {
                 method,
                 headers: {
@@ -33,10 +34,10 @@ export function useMutationQuery<T, M = void>(
                 options.body = JSON.stringify(mutateData)
             }
 
-            const response = await fetch(`http://${currentIp}:${PORT}/${path}`, options)
+            const response = await fetch(`http://${currentIp}:${PORT}/${VERSION}/${path}`, options)
 
             const data = await response.json()
-            return data as DefaultResponse & T
+            return data as T
         },
         onError
     })
