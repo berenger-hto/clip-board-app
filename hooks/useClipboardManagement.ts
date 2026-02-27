@@ -3,12 +3,15 @@ import { useToast } from "react-native-toast-notifications";
 import { useAppStore } from "@/hooks/useAppStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSocketIO } from "@/hooks/useSocketIO";
-import { RefObject, useCallback, useEffect, useRef } from "react";
+import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { FlashListRef } from "@shopify/flash-list";
 import { Data } from "@/types/types";
 
 export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | null>) {
-    const { data: clipboardData, isPending, isSuccess, isError, refetch, isRefetching, isRefetchError } = useFetchQuery<{ data: Data[] }>("clipboard")
+    const { data: clipboardData, isPending, isSuccess, isError, refetch, isRefetching, isRefetchError } = useFetchQuery<{ data: Data[] }>("clipboard", undefined, {
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+    })
     const toast = useToast()
     const isRedirect = useAppStore(state => state.isRedirect)
     const setIsRedirect = useAppStore(state => state.setIsRedirect)

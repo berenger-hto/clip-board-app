@@ -17,6 +17,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/fr'
 import { capitalize } from "@/functions/capitalize";
 import { share } from "@/functions/share";
+import Feather from "@expo/vector-icons/Feather";
 
 type Props = ViewProps & {
     data: Data
@@ -43,41 +44,39 @@ export const ClipboardCard = memo(function ClipboardCard({ data, className, styl
                 shadowOpacity: 0.18,
                 shadowRadius: 1.0
             }]}
-            className={clsx(`p-4 rounded-xl border ${isDark ? "border-slate-800" : "border-slate-200"}`, className)}
+            className={clsx(`p-4 rounded-3xl border ${isDark ? "border-slate-800" : "border-slate-200"}`, className)}
             {...rest}
         >
             {/* CardPreviewHeader */}
             <View className="flex flex-row items-center justify-between">
-                <View className="flex flex-row gap-4">
-                    <Tag type={type} />
-                    <From source={source} color={headerTextColor} />
+                <View className="flex flex-row items-center justify-between w-full">
+                    <View className="flex flex-row items-center justify-center gap-2">
+                        <Tag type={type} />
+                        <Text className="text-[10px]" style={{ color: headerTextColor }}>
+                            {capitalize(dayjs(createdAt).locale('fr').fromNow(true))} • {source}
+                        </Text>
+                    </View>
+                    <View className="flex flex-row items-center justify-center gap-5">
+                        <TouchableOpacity
+                            onPress={handleShareItem}
+                            activeOpacity={.8}
+                        >
+                            <Feather name="share" size={18} color={colors.iconColor} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => addToClipboard(value)}
+                            activeOpacity={.8}
+                        >
+                            <Feather name="copy" size={18} color={colors.iconColor} />
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
-                <Text className="text-[10px]" style={{ color: headerTextColor }}>{capitalize(dayjs(createdAt).locale('fr').fromNow())}</Text>
             </View>
 
             {/*Card body*/}
             <View className="mt-4">
                 <DataObj data={value?.slice(0, 300)} type={type} />
-            </View>
-
-            {/*Card Footer*/}
-            <View className="flex-row justify-between mt-4">
-                <View className="flex">
-                    <TouchableOpacity
-                        className="p-2 mt-2"
-                        onPress={handleShareItem}
-                        activeOpacity={.8}
-                    >
-                        <Entypo name="share" size={20} color={colors.iconColor} />
-                    </TouchableOpacity>
-                </View>
-                <Button
-                    active
-                    icon={<FontAwesome6 name="copy" size={14} color={"#fff"} />}
-                    onPress={() => addToClipboard(value)}
-                >
-                    Copier
-                </Button>
             </View>
         </View>
     </Pressable>
@@ -93,17 +92,6 @@ const Tag = memo(function Tag({ type }: { type: Data['type'] }) {
             className="text-[10px] font-bold tracking-wider">
             {type}
         </ThemedText>
-    </View>
-})
-
-const From = memo(function From({ source, color }: { source: Data['source'], color: string }) {
-    return <View className="flex flex-row items-center justify-center gap-1">
-        {source.toLowerCase() === "mobile" ?
-            <Entypo name="mobile" size={10} color={color} />
-            :
-            <FontAwesome name="desktop" size={13} color={color} />
-        }
-        <ThemedText style={{ color }} className="text-[10px] relative -top-[1px]">From {source}</ThemedText>
     </View>
 })
 

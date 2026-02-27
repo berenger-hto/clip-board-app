@@ -3,6 +3,7 @@ import Feather from '@expo/vector-icons/Feather';
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedText } from "@/components/ThemedText";
 import { useAppStore } from "@/hooks/useAppStore";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Tab = {
     name: string
@@ -16,6 +17,7 @@ type TabElementProps = TouchableOpacityProps & {
 
 export function FloatNav() {
     const { colors } = useThemeColor()
+    const insets = useSafeAreaInsets()
     const tabElements: Tab[] = [
         {
             name: "Presse-Papier",
@@ -51,8 +53,9 @@ export function FloatNav() {
             shadowOpacity: 0,
             shadowRadius: 50,
             elevation: 4,
+            bottom: Math.max(insets.bottom, 20)
         }}
-        className={`"pointer-events-auto absolute bottom-8 py-3 px-8 w-100 self-center items-center flex-row gap-10 border`}
+        className={`"pointer-events-auto absolute py-3 px-8 w-100 self-center items-center flex-row gap-10 border`}
     >
         {tabElements.map((tab, index) => (
             <TabElement

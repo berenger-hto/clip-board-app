@@ -1,63 +1,63 @@
 export const Colors = {
     dark: {
-        primary: "#8B5CF6",
-        background: "#09090b",
-        card: "#121214",
-        textPrimary: "#f4f4f5",
-        box: "#18181b",
-        iconColor: "#a1a1aa",
-        navColor: "rgba(9, 9, 11, 0.85)",
-        borderNavColor: "#18181b",
-        shadowNavColor: "rgba(0, 0, 0, 0.5)",
-        tagSourceBackground: "#121214",
-        tagSourceColor: "#e4e4e7",
-        tagSourceIconColor: "#a1a1aa",
-        tagSourceBorderColor: "#18181b",
-        switchNotActiveColor: "#27272a",
-        segmentedButtonsContainerBackground: "#121214",
+        primary: "#7c3aed",
+        background: "#0a0510",
+        card: "#120e1a",
+        textPrimary: "#f1f5f9",
+        box: "#181423",
+        iconColor: "#94a3b8",
+        navColor: "rgba(10, 5, 16, 0.85)",
+        borderNavColor: "#1e1b4b",
+        shadowNavColor: "rgba(0, 0, 0, 0.6)",
+        tagSourceBackground: "#181423",
+        tagSourceColor: "#e2e8f0",
+        tagSourceIconColor: "#94a3b8",
+        tagSourceBorderColor: "rgba(124, 58, 237, 0.15)",
+        switchNotActiveColor: "#1e1b4b",
+        segmentedButtonsContainerBackground: "#120e1a",
     },
     light: {
-        primary: "#8B5CF6",
-        background: "#f6f7f8",
-        card: "#e6e2e2",
-        textPrimary: "#000",
-        box: "#fff",
-        iconColor: "#555",
-        navColor: "rgba(255,255,255,0.94)",
-        borderNavColor: "#eee",
-        shadowNavColor: "#888",
+        primary: "#7c3aed",
+        background: "#f5f7f8",
+        card: "#ffffff",
+        textPrimary: "#0f172a",
+        box: "#ffffff",
+        iconColor: "#64748b",
+        navColor: "rgba(255, 255, 255, 0.94)",
+        borderNavColor: "#e2e8f0",
+        shadowNavColor: "rgba(0, 0, 0, 0.1)",
         tagSourceBackground: "#f1f5f9",
-        tagSourceColor: "#334155",
+        tagSourceColor: "#1e293b",
         tagSourceIconColor: "#64748b",
         tagSourceBorderColor: "#e2e8f0",
-        switchNotActiveColor: "rgba(139,92,246,0.8)",
-        segmentedButtonsContainerBackground: "rgb(226 232 240 / 0.5)",
+        switchNotActiveColor: "rgba(124, 58, 237, 0.2)",
+        segmentedButtonsContainerBackground: "rgba(226, 232, 240, 0.5)",
     }
 }
 
 export const TagColor = {
     dark: {
         URL: {
-            background: "rgba(59, 130, 246, 0.15)",
-            color: "#60a5fa"
+            background: "rgba(124, 58, 237, 0.15)",
+            color: "#a78bfa"
         },
         CODE: {
-            background: "rgba(168, 85, 247, 0.15)",
-            color: "#c084fc"
+            background: "rgba(139, 92, 246, 0.15)",
+            color: "#c4b5fd"
         },
         TEXT: {
-            background: "rgba(161, 161, 170, 0.15)",
-            color: "#a1a1aa"
+            background: "rgba(148, 163, 184, 0.15)",
+            color: "#cbd5e1"
         }
     },
     light: {
         URL: {
-            background: "#dbeafe",
-            color: "#2563eb"
+            background: "#ede9fe",
+            color: "#7c3aed"
         },
         CODE: {
-            background: "#f3e8ff",
-            color: "#9333ea"
+            background: "#f5f3ff",
+            color: "#8b5cf6"
         },
         TEXT: {
             background: "#f1f5f9",
@@ -67,7 +67,7 @@ export const TagColor = {
 }
 
 export const SyncColor = {
-    OK: "#22c55e",
+    OK: "#10b981",
     NO: "#ef4444",
-    PENDING: "#eab308"
+    PENDING: "#f59e0b"
 }

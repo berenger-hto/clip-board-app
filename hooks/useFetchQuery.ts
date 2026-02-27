@@ -1,11 +1,16 @@
 import { useQuery } from "@tanstack/react-query"
 import { useAppStore } from "./useAppStore"
 import { DefaultResponse } from "@/types/types"
+import { UseQueryOptions } from "@tanstack/react-query"
 
 const PORT = 9876
 const VERSION = "v1"
 
-export function useFetchQuery<T>(path: string, options?: RequestInit) {
+export function useFetchQuery<T>(
+    path: string,
+    options?: RequestInit,
+    queryOptions?: Partial<UseQueryOptions<DefaultResponse & T, Error>>
+) {
     const ip = useAppStore(state => state.ip)
     const token = useAppStore(state => state.token)
 
@@ -21,7 +26,8 @@ export function useFetchQuery<T>(path: string, options?: RequestInit) {
                 }
             })
             const data = await response.json()
-            return data as DefaultResponse & T
-        }
+            return data as (DefaultResponse & T)
+        },
+        ...queryOptions
     })
 }

@@ -9,7 +9,7 @@ type SegmentedButtonProps = TouchableOpacityProps & {
 export function SegmentedButton( { active, title, ...rest }: SegmentedButtonProps ) {
     const { isDark, colors } = useThemeColor()
     return <TouchableOpacity
-        style={{ backgroundColor: (active && isDark) ? "#111" : (!isDark && active) ? "#fff" : "transparent" }}
+        style={{ backgroundColor: (active && isDark) ? "#1a1425" : (!isDark && active) ? "#fff" : "transparent" }}
         className="p-2 rounded-lg flex-1"
         activeOpacity={.7}
         {...rest}

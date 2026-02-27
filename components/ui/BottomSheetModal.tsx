@@ -22,7 +22,7 @@ export type BottomSheetModalMethods = {
     open: () => void
 }
 
-export function BottomSheetModal ({ title, actionButtonTitle, handleAction, ref, inputValue, buttonDisabled }: Props) {
+export function BottomSheetModal({ title, actionButtonTitle, handleAction, ref, inputValue, buttonDisabled }: Props) {
     const { colors } = useThemeColor()
     const bottomSheetModalRef = useRef<Modal>(null)
     const snapPoints = useMemo(() => ['75%', '93%'], [])
@@ -32,7 +32,7 @@ export function BottomSheetModal ({ title, actionButtonTitle, handleAction, ref,
     const { dismiss } = useBottomSheetModal()
 
     const [segmentedButtonValue, setSegmentedButtonValue] = useState<SegmentedButtonType>("AUTO")
-    const [value, setValue] = useState(inputValue || "")
+    const textValueRef = useRef(inputValue || "")
 
     const renderBackdrop = useCallback(
         (props: any) => (
@@ -52,7 +52,7 @@ export function BottomSheetModal ({ title, actionButtonTitle, handleAction, ref,
     }
 
     const handlePressActionButton = () => {
-        handleAction(value, segmentedButtonValue)
+        handleAction(textValueRef.current, segmentedButtonValue)
     }
 
     useImperativeHandle(ref, () => ({
@@ -76,13 +76,21 @@ export function BottomSheetModal ({ title, actionButtonTitle, handleAction, ref,
                 backgroundColor: colors.background
             }}
             index={0}
+            onDismiss={() => {
+                textValueRef.current = ""
+                setSegmentedButtonValue("AUTO")
+            }}
         >
             <BottomSheetView className="p-4" style={{ flex: 1 }}>
                 <View className="flex-1">
                     <ThemedText className="opacity-60 uppercase text-center text-sm font-bold -mt-2 mb-8">
                         {title}
                     </ThemedText>
-                    <Textarea placeholder="Collez ou écrivez votre contenu ici" value={value} onChangeText={setValue} />
+                    <Textarea
+                        placeholder="Collez ou écrivez votre contenu ici"
+                        defaultValue={textValueRef.current}
+                        onChangeText={(text) => { textValueRef.current = text }}
+                    />
                 </View>
 
                 <View className="mt-5">

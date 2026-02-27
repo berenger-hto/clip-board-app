@@ -16,7 +16,7 @@ export function Button({ children, className, active, icon, textClassName, textS
 
     return <TouchableOpacity
         style={[{backgroundColor: active ? colors.primary : colors.box}]}
-        className={clsx(`border flex ${icon && "flex-row gap-2 items-center justify-center"} ${isDark ? "border-slate-800" : "border-slate-200"} text-center rounded-2xl h-12 items-center justify-center self-center px-5`, className)}
+        className={clsx(`border flex ${icon && "flex-row gap-2 items-center justify-center"} ${isDark ? "border-slate-800" : "border-slate-200"} text-center rounded-3xl h-12 items-center justify-center self-center px-5`, className)}
         {...rest}
         activeOpacity={.8}
     >

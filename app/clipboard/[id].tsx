@@ -145,7 +145,7 @@ export default function CardPreview() {
                     <Button
                         active
                         icon={<Feather name="copy" size={18} color={"#fff"} />}
-                        className="w-full h-16"
+                        className="w-full h-16 rounded-5xl"
                         textClassName="!text-lg !font-semibold"
                         onPress={() => addToClipboard(data.value)}
                     >
@@ -154,7 +154,7 @@ export default function CardPreview() {
                     <View className="flex-row items-center justify-center gap-4 w-full mt-3">
                         <TouchableOpacity
                             style={{ borderColor: colors.tagSourceBorderColor, backgroundColor: colors.tagSourceBackground }}
-                            className="flex-row gap-2 items-center justify-center border rounded-xl py-3 px-8 w-[48%]"
+                            className="flex-row gap-2 items-center justify-center border rounded-3xl py-3 px-8 w-[48%]"
                             activeOpacity={.8}
                             onPress={handleOpenModal}
                         >
@@ -163,7 +163,7 @@ export default function CardPreview() {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{ backgroundColor: colors.background }}
-                            className={`flex-row gap-2 items-center justify-center border rounded-xl py-3 px-8 w-[48%] ${isDark ? "border-red-400/20" : "border-red-500/20"} ${isPendingDelete && "opacity-15"}`}
+                            className={`flex-row gap-2 items-center justify-center border rounded-3xl py-3 px-8 w-[48%] ${isDark ? "border-red-400/20" : "border-red-500/20"} ${isPendingDelete && "opacity-15"}`}
                             activeOpacity={isPendingDelete ? .15 : .8}
                             onPress={handleDelete}
                             disabled={isPendingDelete}

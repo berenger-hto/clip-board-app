@@ -14,7 +14,7 @@ export function AddItemToClipboard() {
     const modalRef = useRef<BottomSheetModalMethods>(null)
     const { colors } = useThemeColor()
     const { mutate, isSuccess, isError, isPending, data } = useMutationQuery<{ content: string, type: string, source: Data["source"] }>(`clipboard`, "POST")
-
+    
     const handleOpenModal = () => {
         modalRef.current?.open()
     }
@@ -50,12 +50,12 @@ export function AddItemToClipboard() {
 
     return <>
         <TouchableOpacity
-            className="absolute bottom-32 right-6 h-16 w-16 rounded-full items-center justify-center"
-            style={{ backgroundColor: colors.primary }}
+            className="absolute right-3 bottom-24 h-14 w-14 rounded-full items-center justify-center"
+            style={{ backgroundColor: colors.primary, elevation: 4 }}
             activeOpacity={.9}
             onPress={handleOpenModal}
         >
-            <Feather name="plus" size={24} color={"#fff"} />
+            <Feather name="plus" size={20} color={"#fff"} />
         </TouchableOpacity>
 
         <BottomSheetModal

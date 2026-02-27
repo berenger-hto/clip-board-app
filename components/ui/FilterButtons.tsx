@@ -14,7 +14,7 @@ export function FilterButtons() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View className="flex-row gap-3 mt-5">
                 {["Tout", "URL", "Code", "Favoris"].map((btn, index) => (
-                    <Button key={btn} active={index === active} onPress={() => handleActive(index)}>
+                    <Button className="h-11" key={btn} active={index === active} onPress={() => handleActive(index)}>
                         {btn}
                     </Button>
                 ))}
