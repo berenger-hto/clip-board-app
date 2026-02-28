@@ -15,6 +15,7 @@ export const Colors = {
         tagSourceBorderColor: "rgba(124, 58, 237, 0.15)",
         switchNotActiveColor: "#1e1b4b",
         segmentedButtonsContainerBackground: "#120e1a",
+        bottomSheetIndicatorColor: "rgba(255, 255, 255, 0.2)"
     },
     light: {
         primary: "#7c3aed",
@@ -32,6 +33,7 @@ export const Colors = {
         tagSourceBorderColor: "#e2e8f0",
         switchNotActiveColor: "rgba(124, 58, 237, 0.2)",
         segmentedButtonsContainerBackground: "rgba(226, 232, 240, 0.5)",
+        bottomSheetIndicatorColor: "rgba(0, 0, 0, 0.2)"
     }
 }
 

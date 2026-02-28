@@ -3,42 +3,60 @@ import { ThemedText } from "@/components/ThemedText";
 import { View } from "@/components/View";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import Feather from '@expo/vector-icons/Feather';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import Slider from "@react-native-community/slider";
 import { useState } from "react";
-import { Text as NativeText, View as NativeView, Pressable, Switch, TextProps, useColorScheme } from "react-native";
+import { Text as NativeText, View as NativeView, Pressable, Switch, TextProps } from "react-native";
 import { useAppStore } from "@/hooks/useAppStore";
 
-type PreferenceType = {
+type Preference = {
     name: string
-    iconName: "refresh-cw" | "bell" | "lock" | "moon"
+    iconName: "refresh-cw" | "lock" | "moon" | "eye" | "volume-2"
+    active: boolean
+    setActive: () => void
 }
 
 type PreferenceProps = {
-    preference: PreferenceType
+    preference: Preference
     active: boolean
     setActive: () => void
 }
 
 export function Settings() {
-    const preferences: PreferenceType[] = [
-        {
-            name: "Synchronisation Automatique",
-            iconName: "refresh-cw"
-        },
-        {
-            name: "Mode sombre",
-            iconName: "moon",
-        }
-    ]
-
-    const [sliderValue, setSliderValue] = useState(1)
-    const { colors, isDark } = useThemeColor()
+    const { isDark } = useThemeColor()
     const ip = useAppStore(state => state.ip)
     const appTheme = useAppStore(state => state.appTheme)
     const setAppTheme = useAppStore(state => state.setAppTheme)
     const autoSync = useAppStore(state => state.autoSync)
     const setAutoSync = useAppStore(state => state.setAutoSync)
+    const [sound, setSound] = useState(true)
+    
+    const preferences: Preference[] = [
+        {
+            name: "Synchronisation Automatique",
+            iconName: "refresh-cw",
+            active: autoSync,
+            setActive: () => setAutoSync(!autoSync)
+        },
+        {
+            name: "Mode sombre",
+            iconName: "moon",
+            active: appTheme ? appTheme === "dark" : isDark,
+            setActive: () => setAppTheme(appTheme && appTheme === "dark" ? "light" : "dark")
+        },
+        {
+            name: "Son de Copie", 
+            iconName: "volume-2",
+            active: sound,
+            setActive: () => setSound(!sound)
+        },
+        /**
+        {
+            name: "Mode Incognito",
+            iconName: "eye",
+            active: false,
+            setActive: () => {}
+        }
+        */
+    ]
 
     return <View>
         <ThemedText className="text-3xl font-bold">Paramètres</ThemedText>
@@ -55,46 +73,14 @@ export function Settings() {
         <View className="mt-8">
             <Text className="uppercase font-bold mb-4 text-sm">Préférences générales</Text>
             <View>
-                <Preference
-                    preference={preferences[0]}
-                    active={autoSync}
-                    setActive={() => setAutoSync(!autoSync)}
-                />
-                <Preference
-                    preference={preferences[1]}
-                    active={appTheme ? appTheme === "dark" : isDark}
-                    setActive={() => setAppTheme(appTheme && appTheme === "dark" ? "light" : "dark")}
-                />
-            </View>
-        </View>
-        <View className="mt-8">
-            <Text className="font-bold uppercase mb-4 text-sm">Mémoire et Historique</Text>
-            <View className="flex-row items-center justify-between">
-                <NativeView className="flex-row items-center justify-center gap-2">
-                    <NativeView style={{ backgroundColor: colors.tagSourceBackground }} className="h-12 w-12 rounded-lg items-center justify-center">
-                        <MaterialIcons name="history" size={18} color={colors.tagSourceIconColor} />
-                    </NativeView>
-                    <ThemedText className="font-semibold text-lg">Conservation de l'historique</ThemedText>
-                </NativeView>
-                <NativeText className="font-bold text-lg opacity-75" style={{ color: colors.primary }}>
-                    {Math.round(sliderValue)} {sliderValue > 1 ? "jours" : "jour"}
-                </NativeText>
-            </View>
-            <View className="mt-2">
-                <Slider
-                    style={{ width: "100%" }}
-                    minimumValue={1}
-                    maximumValue={90}
-                    minimumTrackTintColor={colors.textPrimary}
-                    maximumTrackTintColor={colors.textPrimary}
-                    thumbTintColor={colors.textPrimary}
-                    value={sliderValue}
-                    onValueChange={(value) => setSliderValue(value)}
-                />
-                <View className="flex-row items-center justify-between mt-2">
-                    <Text className="text-sm">1 jour</Text>
-                    <Text className="text-sm">90 jours</Text>
-                </View>
+                {preferences.map((preference, index) => (
+                    <Preference
+                        key={index}
+                        preference={preference}
+                        active={preference.active}
+                        setActive={preference.setActive}
+                    />
+                ))}
             </View>
         </View>
         {/**

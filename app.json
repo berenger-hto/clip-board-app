@@ -63,6 +63,12 @@
           "microphonePermission": "Allow ClipboardX to access your microphone",
           "recordAudioAndroid": true
         }
+      ],
+      [
+        "expo-audio",
+        {
+          "enableBackgroundPlayback": true
+        }
       ]
     ],
     "experiments": {

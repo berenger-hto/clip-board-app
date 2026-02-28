@@ -12,7 +12,6 @@ import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Button } from "@/components/forms/Button";
 import { NotFound } from "@/components/ui/NotFound";
-import { addToClipboard } from "@/functions/addToClipboard";
 import { useFetchQuery } from "@/hooks/useFetchQuery";
 import { useEffect, useRef } from "react";
 import { useToast } from "react-native-toast-notifications";
@@ -21,6 +20,7 @@ import { BottomSheetModal, type BottomSheetModalMethods } from "@/components/ui/
 import type { DefaultResponse, SegmentedButtonType } from "@/types/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useBottomSheetModal } from "@gorhom/bottom-sheet";
+import { useAddToClipboard } from "@/hooks/useAddToClipboard";
 
 export default function CardPreview() {
     const { id } = useLocalSearchParams()
@@ -33,6 +33,7 @@ export default function CardPreview() {
     const queryClient = useQueryClient()
     const router = useRouter()
     const { dismiss } = useBottomSheetModal()
+    const copy = useAddToClipboard()
     const handleDelete = () => {
         deleteMutate()
     }
@@ -145,16 +146,17 @@ export default function CardPreview() {
                     <Button
                         active
                         icon={<Feather name="copy" size={18} color={"#fff"} />}
-                        className="w-full h-16 rounded-5xl"
+                        className="w-full h-16"
                         textClassName="!text-lg !font-semibold"
-                        onPress={() => addToClipboard(data.value)}
+                        style={{ borderRadius: 50 }}
+                        onPress={() => copy(data.value)}
                     >
                         Copier dans le presse-papier
                     </Button>
                     <View className="flex-row items-center justify-center gap-4 w-full mt-3">
                         <TouchableOpacity
-                            style={{ borderColor: colors.tagSourceBorderColor, backgroundColor: colors.tagSourceBackground }}
-                            className="flex-row gap-2 items-center justify-center border rounded-3xl py-3 px-8 w-[48%]"
+                            style={{ backgroundColor: colors.tagSourceBackground }}
+                            className="flex-row gap-2 items-center justify-center rounded-3xl py-3 px-8 w-[48%]"
                             activeOpacity={.8}
                             onPress={handleOpenModal}
                         >
@@ -162,8 +164,7 @@ export default function CardPreview() {
                             <ThemedText className="opacity-80 font-bold text-lg">Editer</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={{ backgroundColor: colors.background }}
-                            className={`flex-row gap-2 items-center justify-center border rounded-3xl py-3 px-8 w-[48%] ${isDark ? "border-red-400/20" : "border-red-500/20"} ${isPendingDelete && "opacity-15"}`}
+                            className={`flex-row gap-2 items-center justify-center rounded-3xl py-3 px-8 w-[48%] ${isDark ? "bg-red-400/20" : "bg-red-500/20"} ${isPendingDelete && "opacity-15"}`}
                             activeOpacity={isPendingDelete ? .15 : .8}
                             onPress={handleDelete}
                             disabled={isPendingDelete}

@@ -2,15 +2,10 @@ import { View, type ViewProps, Text, Pressable, TouchableOpacity, GestureRespond
 import { Data } from "@/types/types";
 import { clsx } from "clsx";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import Entypo from '@expo/vector-icons/Entypo';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { TagColor } from "@/constants/Colors";
 import { ThemedText } from "@/components/ThemedText";
 import { openURL } from "@/functions/openURL"
-import { Button } from "@/components/forms/Button";
 import { useRouter } from "expo-router";
-import { addToClipboard } from "@/functions/addToClipboard";
 import { memo } from "react";
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -18,6 +13,7 @@ import 'dayjs/locale/fr'
 import { capitalize } from "@/functions/capitalize";
 import { share } from "@/functions/share";
 import Feather from "@expo/vector-icons/Feather";
+import { useAddToClipboard } from "@/hooks/useAddToClipboard";
 
 type Props = ViewProps & {
     data: Data
@@ -25,6 +21,7 @@ type Props = ViewProps & {
 
 export const ClipboardCard = memo(function ClipboardCard({ data, className, style, ...rest }: Props) {
     const { colors, isDark } = useThemeColor()
+    const copy = useAddToClipboard()
     const headerTextColor = isDark ? "#94a3b8" : "#64748b"
     const { type, createdAt, source, value, id } = data
     const router = useRouter()
@@ -64,7 +61,7 @@ export const ClipboardCard = memo(function ClipboardCard({ data, className, styl
                             <Feather name="share" size={18} color={colors.iconColor} />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => addToClipboard(value)}
+                            onPress={() => copy(value)}
                             activeOpacity={.8}
                         >
                             <Feather name="copy" size={18} color={colors.iconColor} />

@@ -117,9 +117,10 @@ export function Devices() {
                 backdropComponent={renderBackdrop}
                 enablePanDownToClose
                 handleIndicatorStyle={{
-                    backgroundColor: colors.primary,
-                    height: 8,
-                    width: 40
+                    backgroundColor: colors.bottomSheetIndicatorColor,
+                    height: 5,
+                    width: 36,
+                    borderRadius: 10
                 }}
                 backgroundStyle={{
                     backgroundColor: colors.background
@@ -150,7 +151,7 @@ export function Devices() {
                                 top: 210,
                                 left: 18
                             }}
-                            color={colors.primary}
+                            color={colors.bottomSheetIndicatorColor}
                         />
                     </View>
                 </BottomSheetView>

@@ -6,12 +6,21 @@ import { useSocketIO } from "@/hooks/useSocketIO";
 import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { FlashListRef } from "@shopify/flash-list";
 import { Data } from "@/types/types";
+import * as Clipboard from "expo-clipboard"
+import { useMutationQuery } from "./useMutationQuery";
 
 export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | null>) {
     const { data: clipboardData, isPending, isSuccess, isError, refetch, isRefetching, isRefetchError } = useFetchQuery<{ data: Data[] }>("clipboard", undefined, {
         refetchOnWindowFocus: false,
         refetchOnMount: false,
     })
+    const { mutate: insertToClipboard, isPending: pending, data: dataInsert } = useMutationQuery<{ content: string, type: string, source: string }>("clipboard", "POST")
+
+    useEffect(() => {
+        console.log("Is pending", pending)
+        console.log("Data insert", (dataInsert))
+    }, [dataInsert, pending])
+
     const toast = useToast()
     const isRedirect = useAppStore(state => state.isRedirect)
     const setIsRedirect = useAppStore(state => state.setIsRedirect)
@@ -57,6 +66,19 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
         }
 
     }, [clipboardData, isPending, isSuccess, isError, isRedirect, ip, token])
+
+    const initialSyncDone = useRef(false)
+
+    useEffect(() => {
+        if (!ip || !token || !isConnected || !autoSync || initialSyncDone.current) return
+
+        initialSyncDone.current = true
+        Clipboard.getStringAsync().then(value => {
+            if (value) {
+                insertToClipboard({ content: value, type: "AUTO", source: "Mobile" })
+            }
+        })
+    }, [ip, token, isConnected, autoSync, insertToClipboard])
 
     useEffect(() => {
         if (!socket || !autoSync) return

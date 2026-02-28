@@ -11,11 +11,11 @@ type Props = TouchableOpacityProps & {
     textStyle?: TextStyle
 }
 
-export function Button({ children, className, active, icon, textClassName, textStyle, ...rest }: Props) {
+export function Button({ children, className, active, icon, textClassName, textStyle, style, ...rest }: Props) {
     const {isDark, colors} = useThemeColor()
 
     return <TouchableOpacity
-        style={[{backgroundColor: active ? colors.primary : colors.box}]}
+        style={[style, {backgroundColor: active ? colors.primary : colors.box}]}
         className={clsx(`border flex ${icon && "flex-row gap-2 items-center justify-center"} ${isDark ? "border-slate-800" : "border-slate-200"} text-center rounded-3xl h-12 items-center justify-center self-center px-5`, className)}
         {...rest}
         activeOpacity={.8}

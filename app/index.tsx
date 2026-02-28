@@ -5,7 +5,6 @@ import { Clipboard } from "@/components/pages/Clipboard";
 import { useAppStore } from "@/hooks/useAppStore";
 import { Settings } from "@/components/pages/Settings";
 import { Devices } from "@/components/pages/Devices";
-import { useSecureStore } from "@/hooks/useSecureStore";
 import { View } from "@/components/View";
 import { ScrollView, useWindowDimensions } from "react-native";
 import { useEffect, useRef } from "react";
@@ -16,7 +15,6 @@ export default function App() {
     const { width } = useWindowDimensions()
     const scrollRef = useRef<ScrollView>(null)
 
-    // Sync scroll position when index changes (e.g. from FloatNav click)
     useEffect(() => {
         scrollRef.current?.scrollTo({ x: tabActiveIndex * width, animated: true })
     }, [tabActiveIndex, width])
