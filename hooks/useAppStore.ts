@@ -1,5 +1,6 @@
 import { create } from "zustand/react";
 import { combine } from "zustand/middleware";
+import { Data } from "@/types/types";
 
 export const useAppStore = create(
     combine(
@@ -9,7 +10,9 @@ export const useAppStore = create(
             appTheme: null as "dark" | "light" | null,
             autoSync: true,
             ip: null as string | null,
-            token: null as string | null
+            token: null as string | null,
+            soundOfCopy: true,
+            data: null as Data[] | null
         },
         (set) => (
             {
@@ -18,7 +21,9 @@ export const useAppStore = create(
                 setAppTheme: (appTheme: "dark" | "light") => set({ appTheme }),
                 setAutoSync: (autoSync: boolean) => set({ autoSync }),
                 setIp: (ip: string | null) => set({ ip }),
-                setToken: (token: string | null) => set({ token })
+                setToken: (token: string | null) => set({ token }),
+                setSoundOfCopy: (soundOfCopy: boolean) => set({ soundOfCopy }),
+                setData: (data: Data[] | null) => set({ data })
             }
         )
     )

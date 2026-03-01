@@ -27,7 +27,8 @@ export function Settings() {
     const setAppTheme = useAppStore(state => state.setAppTheme)
     const autoSync = useAppStore(state => state.autoSync)
     const setAutoSync = useAppStore(state => state.setAutoSync)
-    const [sound, setSound] = useState(true)
+    const soundOfCopy = useAppStore(state => state.soundOfCopy)
+    const setSoundOfCopy = useAppStore(state => state.setSoundOfCopy)
     
     const preferences: Preference[] = [
         {
@@ -45,8 +46,8 @@ export function Settings() {
         {
             name: "Son de Copie", 
             iconName: "volume-2",
-            active: sound,
-            setActive: () => setSound(!sound)
+            active: soundOfCopy,
+            setActive: () => setSoundOfCopy(!soundOfCopy)
         },
         /**
         {
