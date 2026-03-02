@@ -33,7 +33,7 @@ export function Clipboard() {
                             <ThemedText className="text-center text-xl font-bold mt-10 opacity-80 mb-4">
                                 Aucune donnée
                             </ThemedText>
-                            <Button onPress={() => setTabActiveIndex(1)}>Ajouter un appareil</Button>
+                            <Button onPress={() => setTabActiveIndex(2)}>Ajouter un appareil</Button>
                         </View>
                     )
                 }

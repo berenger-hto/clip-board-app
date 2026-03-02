@@ -1,13 +1,14 @@
 import "../styles/global.css"
 import { SafeAreaView } from "@/components/SafeAreaView";
 import { FloatNav } from "@/components/ui/FloatNav";
-import { Clipboard } from "@/components/pages/Clipboard";
+import { Clipboard } from "@/components/screens/Clipboard";
 import { useAppStore } from "@/hooks/useAppStore";
-import { Settings } from "@/components/pages/Settings";
-import { Devices } from "@/components/pages/Devices";
+import { Settings } from "@/components/screens/Settings";
+import { Devices } from "@/components/screens/Devices";
 import { View } from "@/components/View";
 import { ScrollView, useWindowDimensions } from "react-native";
 import { useEffect, useRef } from "react";
+import { Search } from "@/components/screens/Search";
 
 export default function App() {
     const tabActiveIndex = useAppStore(state => state.tabActiveIndex)
@@ -39,6 +40,9 @@ export default function App() {
         >
             <View style={{ width }} className="p-4 flex-1">
                 <Clipboard />
+            </View>
+            <View style={{ width }} className="p-4 flex-1">
+                <Search />
             </View>
             <View style={{ width }} className="p-4 flex-1">
                 <Devices />

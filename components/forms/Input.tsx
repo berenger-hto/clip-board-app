@@ -5,13 +5,13 @@ import {RefObject, useState} from "react";
 import {View} from "@/components/View";
 import {ThemedText} from "@/components/ThemedText";
 
-type Props = TextInputProps & {
+export type InputProps = TextInputProps & {
     label?: string
     labelStyle?: TextProps
     inputRef?: RefObject<TextInput | null>
 }
 
-export function Input({ className, style, label, labelStyle, inputRef, ...rest }: Props) {
+export function Input({ className, style, label, labelStyle, inputRef, ...rest }: InputProps) {
     const { colors, isDark } = useThemeColor()
     const [isFocused, setIsFocused] = useState(false)
 

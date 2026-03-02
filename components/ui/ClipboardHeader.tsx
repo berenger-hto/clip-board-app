@@ -1,5 +1,5 @@
 import { ThemedText } from "@/components/ThemedText";
-import { Pressable, View as NativeView, Text } from "react-native";
+import { Pressable, View as NativeView } from "react-native";
 import { View } from "@/components/View";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -18,7 +18,7 @@ export function ClipboardHeader() {
     return <>
         <View className="items-center flex-row justify-between">
             <ThemedText className={`text-2xl font-bold ${!isDark && "opacity-75"}`}>ClipboardX</ThemedText>
-            <Pressable onPress={() => setTabActiveIndex(1)}>
+            <Pressable onPress={() => setTabActiveIndex(2)}>
                 <View className="flex items-center justify-center h-10 w-10 rounded-full">
                     <MaterialIcons name="devices" size={22} color={colors.textPrimary} className="opacity-50" />
                 </View>
@@ -30,7 +30,9 @@ export function ClipboardHeader() {
                 {syncState}
             </ThemedText>
         </View>
-        <SearchInput />
+        <Pressable onPress={() => setTabActiveIndex(1)}>
+            <SearchInput placeholder="Rechercher..." editable={false} />
+        </Pressable>
         <FilterButtons />
     </>
 }

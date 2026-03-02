@@ -4,10 +4,11 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedText } from "@/components/ThemedText";
 import { useAppStore } from "@/hooks/useAppStore";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { MotiView, AnimatePresence } from "moti";
 
 type Tab = {
     name: string
-    iconName: "clipboard" | "settings" | "monitor"
+    iconName: "clipboard" | "settings" | "monitor" | "search"
 }
 
 type TabElementProps = TouchableOpacityProps & {
@@ -22,6 +23,10 @@ export function FloatNav() {
         {
             name: "Presse-Papier",
             iconName: "clipboard",
+        },
+        {
+            name: "Rechercher",
+            iconName: "search"
         },
         {
             name: "Appareils",
@@ -45,17 +50,10 @@ export function FloatNav() {
             backgroundColor: colors.navColor,
             borderRadius: 90,
             borderColor: colors.borderNavColor,
-            shadowColor: "#444",
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: 0,
-            shadowRadius: 50,
-            elevation: 4,
+            elevation: 10,
             bottom: Math.max(insets.bottom, 20)
         }}
-        className={`"pointer-events-auto absolute py-3 px-8 w-100 self-center items-center flex-row gap-10 border`}
+        className="pointer-events-auto absolute py-3 px-8 self-center items-center flex-row gap-8 border shadow-lg"
     >
         {tabElements.map((tab, index) => (
             <TabElement
@@ -73,15 +71,49 @@ function TabElement({ tab, active, ...rest }: TabElementProps) {
 
     return <TouchableOpacity
         activeOpacity={.8}
-        className="flex-col items-center justify-center"
         {...rest}
     >
-        <Feather name={tab.iconName} size={16} color={active ? colors.primary : isDark ? "#aaa" : "#888"} />
-        <ThemedText
-            className={`text-[10px] font-bold}`}
-            style={{ color: active ? colors.primary : isDark ? "#aaa" : "#888", fontWeight: active ? "bold" : "normal" }}
+        <MotiView
+            animate={{
+                scale: active ? 1.1 : 1,
+                opacity: active ? 1 : 0.6,
+            }}
+            transition={{
+                type: 'spring',
+                damping: 15,
+                stiffness: 150
+            }}
+            className="flex-col items-center justify-center"
         >
-            {tab.name}
-        </ThemedText>
+            <Feather
+                name={tab.iconName}
+                size={active ? 14 : 20}
+                color={active ? colors.primary : isDark ? "#aaa" : "#888"}
+            />
+
+            <AnimatePresence>
+                {active && (
+                    <MotiView
+                        from={{ opacity: 0, scale: 1, height: 0 }}
+                        animate={{ opacity: 1, scale: 1, height: 16 }}
+                        exit={{ opacity: 0, scale: 1, height: 0 }}
+                        transition={{
+                            type: 'timing',
+                            duration: 200,
+                        }}
+                    >
+                        <ThemedText
+                            className="text-[10px] font-bold"
+                            style={{
+                                color: active ? colors.primary : isDark ? "#aaa" : "#888",
+                                textAlign: 'center'
+                            }}
+                        >
+                            {tab.name}
+                        </ThemedText>
+                    </MotiView>
+                )}
+            </AnimatePresence>
+        </MotiView>
     </TouchableOpacity>
 }
