@@ -21,6 +21,7 @@ export function Clipboard() {
         <View style={{ flex: 1 }}>
             <ClipboardHeader />
             <FlashList
+                className="flex-1 h-full"
                 ref={listRef}
                 data={data ?? []}
                 renderItem={({ item }) => <ClipboardCard data={item} />}
@@ -54,6 +55,7 @@ export function Clipboard() {
                 }}
                 ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
                 showsVerticalScrollIndicator={false}
+                nestedScrollEnabled
             />
             <AddItemToClipboard />
         </View>

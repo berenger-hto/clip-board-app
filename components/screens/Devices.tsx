@@ -13,6 +13,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import * as Device from 'expo-device'
 import { useScanner } from "@/hooks/useScanner";
 import { useDeviceManagement } from "@/hooks/useDeviceManagement";
+import { useSocketIO } from "@/hooks/useSocketIO";
 
 /**
  * Propriétés pour le composant DeviceItem.
@@ -34,6 +35,7 @@ export function Devices() {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null)
     const toast = useToast()
     const { dismiss } = useBottomSheetModal()
+    const { isConnected } = useSocketIO()
 
     // Hooks personnalisés pour la séparation de la logique
     const { permission, requestPermission, handleScan } = useScanner()
@@ -99,7 +101,7 @@ export function Devices() {
                             <DeviceItem
                                 type="PC"
                                 name={device.deviceName ?? "Unknown"}
-                                statut={isCurrentDevice === device.deviceName ? "Online" : "Offline"}
+                                statut={(isConnected && isCurrentDevice === device.deviceName) ? "Online" : "Offline"}
                                 noBorder
                                 key={index}
                             />

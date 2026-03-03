@@ -61,6 +61,7 @@ export default function CardPreview() {
                 type: dataDelete.success ? "success" : "warning"
             })
             router.push("/")
+            queryClient.invalidateQueries({ queryKey: ["all"] })
         }
 
     }, [isErrorDelete, dataDelete, toast])
@@ -78,11 +79,12 @@ export default function CardPreview() {
                 type: dataEdit.success ? "success" : "warning"
             })
             queryClient.invalidateQueries({ queryKey: [`clipboard/${id}`] })
+            queryClient.invalidateQueries({ queryKey: ["all"] })
             dismiss()
         }
     }, [isErrorEdit, dataEdit, toast])
 
-    if (isError || (clipboardData && !clipboardData.success)) return <NotFound title="Aucun presse-papier trouvé" />
+    if (isError || (clipboardData && !clipboardData.success)) return <NotFound title="Aucun presse-papier trouvé" description="Cette donnée n'a pas été trouvée !" />
 
     return <SafeAreaView className="flex-1">
         <CardPreviewHeader />
@@ -194,35 +196,35 @@ function InfoType({ type, source }: { type: Data["type"], source: Data["source"]
     return <NativeView className="flex-row gap-2">
         <NativeView
             style={{ borderColor: colors.tagSourceBorderColor, backgroundColor: colors.tagSourceBackground }}
-            className="p-3 py-2 self-center rounded-lg border"
+            className="px-3 py-1 self-center rounded-3xl border"
         >
             <NativeView className="flex-row items-center gap-2">
                 {
-                    type === "CODE" ? <Feather name="code" size={16} color={colors.tagSourceIconColor} /> :
-                        type === "URL" ? <Entypo name="link" size={16} color={colors.tagSourceIconColor} /> :
-                            <Entypo name="text" size={16} color={colors.tagSourceIconColor} />
+                    type === "CODE" ? <Feather name="code" size={12} color={colors.tagSourceIconColor} /> :
+                        type === "URL" ? <Entypo name="link" size={12} color={colors.tagSourceIconColor} /> :
+                            <Entypo name="text" size={12} color={colors.tagSourceIconColor} />
                 }
                 <Text
                     className="uppercase text-sm font-semibold tracking-wider"
                     style={{ color: colors.tagSourceColor }}>
-                    Type: {type}
+                    {type}
                 </Text>
             </NativeView>
         </NativeView>
         <NativeView
             style={{ borderColor: colors.tagSourceBorderColor, backgroundColor: colors.tagSourceBackground }}
-            className="p-3 py-2 self-center rounded-lg border"
+            className="p-3 py-1 self-center rounded-2xl border"
         >
             <NativeView className="flex-row items-center gap-2">
                 {
                     source === "PC" ?
-                        <FontAwesome name="desktop" size={16} color={colors.tagSourceIconColor} />
-                        : <Entypo name="mobile" size={16} color={colors.tagSourceIconColor} />
+                        <FontAwesome name="desktop" size={12} color={colors.tagSourceIconColor} />
+                        : <Entypo name="mobile" size={12} color={colors.tagSourceIconColor} />
                 }
                 <Text
                     className="uppercase text-sm font-semibold tracking-wider"
                     style={{ color: colors.tagSourceColor }}>
-                    Source: {source}
+                    {source}
                 </Text>
             </NativeView>
         </NativeView>

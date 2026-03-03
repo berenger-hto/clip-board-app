@@ -7,6 +7,6 @@ export function SearchInput({ ...rest }: InputProps) {
     const { colors } = useThemeColor()
     return <View>
         <Feather name="search" className="absolute top-[13.5px] left-5 z-10 opacity-50" size={20} color={colors.textPrimary} />
-        <Input className="pl-14 rounded-3xl" {...rest} />
+        <Input className="pl-14 rounded-3xl" {...rest}  />
     </View>
 }

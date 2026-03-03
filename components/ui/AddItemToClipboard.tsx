@@ -7,6 +7,7 @@ import { useRef, useEffect } from "react"
 import Feather from "@expo/vector-icons/Feather"
 import { useThemeColor } from "@/hooks/useThemeColor"
 import { useMutationQuery } from "@/hooks/useMutationQuery"
+import { useQueryClient } from "@tanstack/react-query"
 
 export function AddItemToClipboard() {
     const toast = useToast()
@@ -14,7 +15,8 @@ export function AddItemToClipboard() {
     const modalRef = useRef<BottomSheetModalMethods>(null)
     const { colors } = useThemeColor()
     const { mutate, isSuccess, isError, isPending, data } = useMutationQuery<{ content: string, type: string, source: Data["source"] }>(`clipboard`, "POST")
-    
+    const queryClient = useQueryClient()
+
     const handleOpenModal = () => {
         modalRef.current?.open()
     }
@@ -43,15 +45,26 @@ export function AddItemToClipboard() {
                 type: data.success ? "success" : "warning"
             })
             dismiss()
+            queryClient.invalidateQueries({ queryKey: ["all"] })
         }
-        
+
 
     }, [isPending, isSuccess, isError, data])
 
     return <>
         <TouchableOpacity
-            className="absolute right-3 bottom-24 h-14 w-14 rounded-full items-center justify-center"
-            style={{ backgroundColor: colors.primary, elevation: 4 }}
+            className="absolute right-3 bottom-14 h-14 w-14 rounded-full items-center justify-center"
+            style={{
+                backgroundColor: colors.primary,
+                elevation: 4,
+                shadowColor: "#000",
+                shadowOffset: {
+                    width: 0,
+                    height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+            }}
             activeOpacity={.9}
             onPress={handleOpenModal}
         >

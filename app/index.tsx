@@ -1,6 +1,6 @@
 import "../styles/global.css"
 import { SafeAreaView } from "@/components/SafeAreaView";
-import { FloatNav } from "@/components/ui/FloatNav";
+import { Navigation } from "@/components/ui/Navigation";
 import { Clipboard } from "@/components/screens/Clipboard";
 import { useAppStore } from "@/hooks/useAppStore";
 import { Settings } from "@/components/screens/Settings";
@@ -28,7 +28,7 @@ export default function App() {
         }
     }
 
-    return <SafeAreaView className="flex-1">
+    return <SafeAreaView className="flex-1" edges={['top', 'left', 'right']}>
         <ScrollView
             ref={scrollRef}
             horizontal
@@ -38,21 +38,21 @@ export default function App() {
             scrollEventThrottle={16}
             className="flex-1"
         >
-            <View style={{ width }} className="p-4 flex-1">
+            <View style={{ width }} className="px-4 pt-4 flex-1">
                 <Clipboard />
             </View>
-            <View style={{ width }} className="p-4 flex-1">
+            <View style={{ width }} className="px-4 pt-4 flex-1">
                 <Search />
             </View>
-            <View style={{ width }} className="p-4 flex-1">
+            <View style={{ width }} className="px-4 pt-4 flex-1">
                 <Devices />
             </View>
-            <View style={{ width }} className="p-4 flex-1">
+            <View style={{ width }} className="px-4 pt-4 flex-1">
                 <Settings />
             </View>
         </ScrollView>
 
         {/*Float navigation*/}
-        <FloatNav />
+        <Navigation />
     </SafeAreaView>
 }

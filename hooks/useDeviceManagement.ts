@@ -9,6 +9,8 @@ import { useMutationQuery } from "@/hooks/useMutationQuery";
 import { useFetchQuery } from "@/hooks/useFetchQuery";
 import { useAppStore } from "@/hooks/useAppStore";
 import { useBottomSheetModal } from "@gorhom/bottom-sheet";
+import { useSocketIO } from "./useSocketIO";
+import { useQueryClient } from "@tanstack/react-query";
 
 const clientDataSchema = z.object({
     ip: z.ipv4(),
@@ -27,6 +29,8 @@ export function useDeviceManagement() {
     const [isCurrentDevice, setIsCurrentDevice] = useState<string | null>(null)
     const setIsRedirect = useAppStore(state => state.setIsRedirect)
     const { dismiss } = useBottomSheetModal()
+    const { isConnected } = useSocketIO()
+    const queryClient = useQueryClient()
 
     // Mutation pour enregistrer cet appareil auprès du serveur d'un autre appareil
     const { mutate, isSuccess, data: responseData } = useMutationQuery<MobileDevice, DefaultResponse & { os: OS }>("me", "POST", () => {
@@ -83,6 +87,15 @@ export function useDeviceManagement() {
             }
         }
     }, [isSuccess, responseData, addDevice, loadDevices, toast])
+
+    /**
+     * Invalider la req de device quand le statut de connexion change
+     */
+
+    useEffect(() => {
+        if (!isConnected) return
+        queryClient.invalidateQueries({ queryKey: ["device"] })
+    }, [isConnected])
 
     /**
      * Valide et enregistre un appareil à partir des données QR scannées.

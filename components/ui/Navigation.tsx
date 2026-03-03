@@ -1,10 +1,79 @@
-import { TouchableOpacity, TouchableOpacityProps, View as NativeView } from "react-native";
+import { TouchableOpacity, View as NativeView } from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { ThemedText } from "@/components/ThemedText";
 import { useAppStore } from "@/hooks/useAppStore";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { MotiView, AnimatePresence } from "moti";
+
+type NavElement = {
+    name: string
+    iconName: "clipboard" | "settings" | "monitor" | "search"
+}
+
+const navElements: NavElement[] = [
+    {
+        name: "Presse-Papier",
+        iconName: "clipboard",
+    },
+    {
+        name: "Rechercher",
+        iconName: "search"
+    },
+    {
+        name: "Appareils",
+        iconName: "monitor"
+    },
+    {
+        name: "Paramètres",
+        iconName: "settings"
+    },
+]
+
+export function Navigation() {
+
+    const insets = useSafeAreaInsets()
+    const tabActiveIndex = useAppStore(state => state.tabActiveIndex)
+    const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
+    const { colors, isDark } = useThemeColor()
+
+    const handleChangeTab = (index: number) => {
+        if (index === tabActiveIndex) return
+        setTabActiveIndex(index)
+    }
+
+    return <NativeView
+        style={{
+            backgroundColor: colors.navColor,
+            borderColor: colors.borderNavColor,
+            elevation: 10,
+            shadowColor: "#000",
+            shadowOffset: {
+                width: 0,
+                height: -4,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 10,
+            bottom: insets.bottom,
+        }}
+        className="w-full flex-row items-center justify-between p-6 border-t"
+    >
+        {navElements.map((navElement, index) => (
+            <TouchableOpacity
+                activeOpacity={.8}
+                onPress={() => handleChangeTab(index)}
+                key={index}
+                className="w-20 items-center justify-center"
+            >
+                <Feather
+                    name={navElement.iconName}
+                    size={22}
+                    color={tabActiveIndex === index ? colors.primary : isDark ? "#aaa" : "#888"}
+                />
+            </TouchableOpacity>
+        ))}
+    </NativeView>
+}
+
+/*
 
 type Tab = {
     name: string
@@ -83,7 +152,7 @@ function TabElement({ tab, active, ...rest }: TabElementProps) {
                 damping: 15,
                 stiffness: 150
             }}
-            className="flex-col items-center justify-center"
+            className="flex-row items-center justify-center gap-2"
         >
             <Feather
                 name={tab.iconName}
@@ -117,3 +186,5 @@ function TabElement({ tab, active, ...rest }: TabElementProps) {
         </MotiView>
     </TouchableOpacity>
 }
+
+*/

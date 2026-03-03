@@ -3,6 +3,7 @@ import { useFetchQuery } from "./useFetchQuery";
 import { Data } from "@/types/types";
 import { useAppStore } from "./useAppStore";
 import { useToast } from "react-native-toast-notifications";
+import { useDebounce } from "./useDebounce";
 
 export function useSearchItem() {
     const [searchTerm, setSearchTerm] = useState("")
@@ -11,14 +12,16 @@ export function useSearchItem() {
     const storedData = useAppStore(state => state.data)
     const toast = useToast()
 
+    const debouncedSearchTerm = useDebounce(searchTerm, 500)
+
     const { data: queryData, isSuccess, isLoading } = useFetchQuery<{ data: Data[] }>(
-        `search?q=${searchTerm}`,
+        `search?q=${debouncedSearchTerm}`,
         {},
-        { enabled: searchTerm.length > 0 && !isOfflineMode }
+        { enabled: debouncedSearchTerm.length >= 3 && !isOfflineMode }
     )
 
     useEffect(() => {
-        if (searchTerm.length === 0) {
+        if (debouncedSearchTerm.length === 0) {
             setResults([])
             setIsOfflineMode(false)
             return
@@ -27,41 +30,40 @@ export function useSearchItem() {
         setIsOfflineMode(false)
 
         const timer = setTimeout(() => {
-            if (!isSuccess && searchTerm.length > 0) {
+            if (!isSuccess && debouncedSearchTerm.length > 0) {
                 console.log("Search timeout - switching to offline mode")
                 setIsOfflineMode(true)
             }
         }, 2000)
 
         return () => clearTimeout(timer)
-    }, [searchTerm, isSuccess])
+    }, [debouncedSearchTerm, isSuccess])
 
     useEffect(() => {
-        if (!isSuccess || !queryData) return
+        setResults(queryData?.data ?? [])
+        setIsOfflineMode(false)
+    }, [queryData])
 
-        if (queryData.success) {
-            setResults(queryData.data)
-            setIsOfflineMode(false)
-        } else {
-            toast.show(queryData.message, {
-                type: "danger"
-            })
+    useEffect(() => {
+        if (!storedData) {
+            setResults([])
+            return
         }
 
-    }, [isSuccess, queryData])
-
-    useEffect(() => {
-        if (isOfflineMode && storedData && searchTerm) {
+        if (isOfflineMode && debouncedSearchTerm) {
             const filtered = storedData.filter(item =>
-                item.value.toLowerCase().includes(searchTerm.toLowerCase())
+                item.value.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
             )
             setResults(filtered)
         }
-    }, [isOfflineMode, storedData, searchTerm])
+    }, [isOfflineMode, storedData, debouncedSearchTerm])
 
     return {
+        debouncedSearchTerm,
+        searchTerm,
         search: setSearchTerm,
         results,
+        setResults,
         isOfflineMode,
         isLoading: isLoading && !isOfflineMode
     }

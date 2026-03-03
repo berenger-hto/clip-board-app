@@ -14,11 +14,11 @@ export function FilterButtons() {
         <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            nestedScrollEnabled={true}
+            nestedScrollEnabled
         >
-            <View className="flex-row gap-3 mt-5">
+            <View className="flex-row gap-3 mt-4">
                 {["Tout", "URL", "Code", "Texte", "Favoris"].map((btn, index) => (
-                    <Button className="h-11" key={btn} active={index === active} onPress={() => handleActive(index)}>
+                    <Button style={{ height: 36 }} key={btn} active={index === active} onPress={() => handleActive(index)}>
                         {btn}
                     </Button>
                 ))}
