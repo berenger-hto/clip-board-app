@@ -30,6 +30,7 @@ export default function CardPreview() {
     const toast = useToast()
     const { mutate: deleteMutate, isPending: isPendingDelete, isError: isErrorDelete, isSuccess: isSucessDelete, data: dataDelete } = useMutationQuery(`clipboard/${id}`, "DELETE")
     const { mutate: editMutate, isPending: isPendingEdit, isSuccess: isSuccessEdit, isError: isErrorEdit, data: dataEdit } = useMutationQuery<{content: string, type: SegmentedButtonType}, DefaultResponse>(`clipboard/${id}`, "PATCH")
+    const { mutate: favoriteMutate, isPending: isPendingFavorite, isSuccess: isSuccessFavorite, data: dataFavorite } = useMutationQuery(`favorite/${id}`, "PATCH")
     const queryClient = useQueryClient()
     const router = useRouter()
     const { dismiss } = useBottomSheetModal()
@@ -84,10 +85,20 @@ export default function CardPreview() {
         }
     }, [isErrorEdit, dataEdit, toast])
 
+    useEffect(() => {
+        if (isSuccessFavorite && dataFavorite) {
+            toast.show(dataFavorite.message, {
+                type: dataFavorite.success ? "success" : "warning"
+            })
+            queryClient.invalidateQueries({ queryKey: ["all"] })
+        }
+
+    }, [isSuccessFavorite, dataFavorite, toast])
+
     if (isError || (clipboardData && !clipboardData.success)) return <NotFound title="Aucun presse-papier trouvé" description="Cette donnée n'a pas été trouvée !" />
 
     return <SafeAreaView className="flex-1">
-        <CardPreviewHeader />
+        <CardPreviewHeader mutate={() => favoriteMutate()} />
         {isPending && <View className="flex-1 items-center justify-center">
             <ActivityIndicator size="large" color={colors.tagSourceIconColor} />
         </View>}
