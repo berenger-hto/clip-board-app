@@ -3,23 +3,30 @@ import { useToast } from "react-native-toast-notifications";
 import { useAppStore } from "@/hooks/useAppStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSocketIO } from "@/hooks/useSocketIO";
-import { RefObject, useCallback, useEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useRef } from "react";
 import { FlashListRef } from "@shopify/flash-list";
 import { Data } from "@/types/types";
 import * as Clipboard from "expo-clipboard"
 import { useMutationQuery } from "./useMutationQuery";
+import { useFilterItem } from "./useFilterItem";
 
 export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | null>) {
-    const { data: clipboardData, isPending, isSuccess, isError, refetch, isRefetching, isRefetchError } = useFetchQuery<{ data: Data[] }>("clipboard", undefined, {
+    const {
+        data: clipboardData,
+        isPending: isClipboardPending,
+        isSuccess: isClipboardSuccess,
+        isError: isClipboardError,
+        refetch: refetchClipboard,
+        isRefetching: isClipboardRefetching,
+        isRefetchError: isClipboardRefetchError
+    } = useFetchQuery<{ data: Data[] }>("clipboard", undefined, {
         refetchOnWindowFocus: false,
         refetchOnMount: false,
     })
-    const { mutate: insertToClipboard, isPending: pending, data: dataInsert } = useMutationQuery<{ content: string, type: string, source: string }>("clipboard", "POST")
+    const { mutate: insertToClipboard } = useMutationQuery<{ content: string, type: string, source: string }>("clipboard", "POST")
+    const filterIndicator = useAppStore(state => state.filterIndicator)
 
-    useEffect(() => {
-        console.log("Is pending", pending)
-        console.log("Data insert", (dataInsert))
-    }, [dataInsert, pending])
+    const { filterSuccess, data: filterData, isFilterPending, isFilterError, refetchFilter } = useFilterItem()
 
     const toast = useToast()
     const isRedirect = useAppStore(state => state.isRedirect)
@@ -30,7 +37,14 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     const token = useAppStore(state => state.token)
     const ip = useAppStore(state => state.ip)
 
-    const data = clipboardData?.data
+    const isFiltering = filterIndicator !== "ALL" && filterIndicator !== "FAVORITES"
+    const data = isFiltering ? filterData : clipboardData?.data
+    const isPending = isFiltering ? isFilterPending : isClipboardPending
+    const isSuccess = isFiltering ? filterSuccess : isClipboardSuccess
+    const isError = isFiltering ? isFilterError : isClipboardError
+    const refetch = isFiltering ? refetchFilter : refetchClipboard
+    const isRefetching = isFiltering ? false : isClipboardRefetching
+    const isRefetchError = isFiltering ? false : isClipboardRefetchError
     const autoSync = useAppStore(state => state.autoSync)
 
     const shouldScroll = useRef(false)
@@ -70,7 +84,7 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     const initialSyncDone = useRef(false)
 
     useEffect(() => {
-        if (!ip || !token || !isConnected || !autoSync || initialSyncDone.current) return
+        if (!ip || !token || !isConnected || !autoSync || initialSyncDone.current || !isConnected) return
 
         initialSyncDone.current = true
         Clipboard.getStringAsync().then(value => {
@@ -78,7 +92,7 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
                 insertToClipboard({ content: value, type: "AUTO", source: "Mobile" })
             }
         })
-    }, [ip, token, isConnected, autoSync, insertToClipboard])
+    }, [ip, token, isConnected, autoSync, insertToClipboard, isConnected])
 
     useEffect(() => {
         if (!socket || !autoSync) return
@@ -96,10 +110,10 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     }, [socket, autoSync, refetch])
 
     useEffect(() => {
-        if (!isConnected) return
+        if (!isConnected || !data) return
         refetch()
         scrollTopToRefetch(1000)
-    }, [isConnected])
+    }, [isConnected, data])
 
     useEffect(() => {
         if (shouldScroll.current && data && data.length > 0 && !isRefetching) {

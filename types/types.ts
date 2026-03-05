@@ -30,3 +30,8 @@ export type MobileDevice = {
 }
 
 export type SegmentedButtonType = "AUTO" | "TEXT" | "URL" | "CODE"
+
+export type FilterType = {
+    name: string
+    indicator: "ALL" | "URL" | "CODE" | "TEXT" | "FAVORITES"
+}

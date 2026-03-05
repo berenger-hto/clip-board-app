@@ -4,7 +4,7 @@ import { View } from "@/components/View";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SearchInput } from "@/components/ui/SearchInput";
-import { FilterButtons } from "@/components/ui/FilterButtons";
+import { FilterItemButtons } from "@/components/ui/FilterItemButtons";
 import { SyncColor } from "@/constants/Colors";
 import { useAppStore } from "@/hooks/useAppStore";
 import { useSocketIO } from "@/hooks/useSocketIO";
@@ -33,6 +33,6 @@ export function ClipboardHeader() {
         <Pressable onPress={() => setTabActiveIndex(1)}>
             <SearchInput placeholder="Rechercher..." editable={false} />
         </Pressable>
-        <FilterButtons />
+        <FilterItemButtons />
     </>
 }

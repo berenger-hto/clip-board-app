@@ -44,6 +44,7 @@ export function Navigation() {
         style={{
             backgroundColor: colors.navColor,
             borderColor: colors.borderNavColor,
+            /*
             elevation: 10,
             shadowColor: "#000",
             shadowOffset: {
@@ -52,16 +53,17 @@ export function Navigation() {
             },
             shadowOpacity: 0.1,
             shadowRadius: 10,
+            */
             bottom: insets.bottom,
         }}
-        className="w-full flex-row items-center justify-between p-6 border-t"
+        className="w-full flex-row items-center justify-between px-4 border-t"
     >
         {navElements.map((navElement, index) => (
             <TouchableOpacity
                 activeOpacity={.8}
                 onPress={() => handleChangeTab(index)}
                 key={index}
-                className="w-20 items-center justify-center"
+                className="w-24 h-20 items-center justify-center"
             >
                 <Feather
                     name={navElement.iconName}

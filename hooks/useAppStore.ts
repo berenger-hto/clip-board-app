@@ -1,6 +1,6 @@
 import { create } from "zustand/react";
 import { combine } from "zustand/middleware";
-import { Data } from "@/types/types";
+import { Data, FilterType } from "@/types/types";
 
 export const useAppStore = create(
     combine(
@@ -12,7 +12,8 @@ export const useAppStore = create(
             ip: null as string | null,
             token: null as string | null,
             soundOfCopy: true,
-            data: null as Data[] | null
+            data: null as Data[] | null,
+            filterIndicator: "ALL" as FilterType["indicator"]
         },
         (set) => (
             {
@@ -23,7 +24,8 @@ export const useAppStore = create(
                 setIp: (ip: string | null) => set({ ip }),
                 setToken: (token: string | null) => set({ token }),
                 setSoundOfCopy: (soundOfCopy: boolean) => set({ soundOfCopy }),
-                setData: (data: Data[] | null) => set({ data })
+                setData: (data: Data[] | null) => set({ data }),
+                setFilterIndicator: (filterIndicator: FilterType["indicator"]) => set({ filterIndicator })
             }
         )
     )
