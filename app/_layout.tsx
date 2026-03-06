@@ -26,14 +26,6 @@ async function migrateDbIfNeeded(db: SQLite.SQLiteDatabase) {
             platform TEXT DEFAULT 'TEXT',
             createdAt BIGINT
         );
-
-        CREATE TABLE IF NOT EXISTS history (
-            id INTEGER PRIMARY KEY NOT NULL,
-            value TEXT NOT NULL,
-            type TEXT NOT NULL,
-            source TEXT NOT NULL,
-            createdAt BIGINT
-        );
     `)
 }
 
@@ -73,7 +65,7 @@ function InitializeApp() {
     }, [isSuccess, allData])
 
     useEffect(() => {
-        if (!isConnected) return 
+        if (!isConnected) return
         queryClient.invalidateQueries({ queryKey: ["all"] })
     }, [isConnected])
 

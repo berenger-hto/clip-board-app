@@ -30,11 +30,11 @@ export function Clipboard() {
                     (token && ip && isPending) ? (
                         <ActivityIndicator size="large" />
                     ) : (
-                        <View className="items-center justify-center h-[60%]">
+                        <View className="items-center justify-center">
                             <ThemedText className="text-center text-xl font-bold mt-10 opacity-80 mb-4">
                                 Aucune donnée
                             </ThemedText>
-                            <Button onPress={() => setTabActiveIndex(2)}>Ajouter un appareil</Button>
+                            {(!ip || !token) && <Button onPress={() => setTabActiveIndex(2)}>Ajouter un appareil</Button>}
                         </View>
                     )
                 }

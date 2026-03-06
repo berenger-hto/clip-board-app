@@ -4,6 +4,7 @@ export type Data = {
     createdAt: number
     source: "Mobile" | "PC"
     value: string
+    isFavorite: boolean
 }
 
 export type ClientData = {

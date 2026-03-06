@@ -26,7 +26,7 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     const { mutate: insertToClipboard } = useMutationQuery<{ content: string, type: string, source: string }>("clipboard", "POST")
     const filterIndicator = useAppStore(state => state.filterIndicator)
 
-    const { filterSuccess, data: filterData, isFilterPending, isFilterError, refetchFilter } = useFilterItem()
+    const { filterSuccess, data: filterData, isFilterPending, isFilterError, refetchFilter, isOffline } = useFilterItem()
 
     const toast = useToast()
     const isRedirect = useAppStore(state => state.isRedirect)
@@ -37,7 +37,7 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     const token = useAppStore(state => state.token)
     const ip = useAppStore(state => state.ip)
 
-    const isFiltering = filterIndicator !== "ALL" && filterIndicator !== "FAVORITES"
+    const isFiltering = filterIndicator !== "ALL"
     const data = isFiltering ? filterData : clipboardData?.data
     const isPending = isFiltering ? isFilterPending : isClipboardPending
     const isSuccess = isFiltering ? filterSuccess : isClipboardSuccess
@@ -95,10 +95,11 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     }, [ip, token, isConnected, autoSync, insertToClipboard, isConnected])
 
     useEffect(() => {
-        if (!socket || !autoSync) return
+        if (!socket || !autoSync || isOffline) return
 
         const handleClipboard = async () => {
             shouldScroll.current = true
+            queryClient.invalidateQueries({ queryKey: ["filter?f=FAVORITES", "filter?f=URL", "filter?f=CODE", "filter?f=TEXT"] })
             await refetch()
         }
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useAppStore } from "./useAppStore"
 import { useFetchQuery } from "./useFetchQuery"
 import { Data } from "@/types/types"
+import { useSocketIO } from "./useSocketIO"
 
 export function useFilterItem() {
     const filterIndicator = useAppStore(state => state.filterIndicator)
@@ -15,7 +16,7 @@ export function useFilterItem() {
         isError: isFilterError,
         refetch: refetchFilter
     } = useFetchQuery<{ data: Data[] }>(`filter?f=${filterIndicator}`, undefined, {
-        enabled: filterIndicator !== "ALL" && filterIndicator !== "FAVORITES" && !isOffline
+        enabled: filterIndicator !== "ALL" && !isOffline
     })
 
     useEffect(() => {
@@ -23,7 +24,6 @@ export function useFilterItem() {
 
         const timeOut = setTimeout(() => {
             if (!filterSuccess || !filterData?.success) {
-                console.log("Offline filter")
                 setIsOffline(true)
             }
         }, 2000)
@@ -40,7 +40,7 @@ export function useFilterItem() {
         if (isOffline || !filterSuccess) {
             setData(() => {
                 if (!storedData) return []
-                if (filterIndicator === "ALL" || filterIndicator === "FAVORITES") return storedData
+                if (filterIndicator === "ALL") return storedData
                 return storedData.filter(d => d.type === filterIndicator)
             })
         }

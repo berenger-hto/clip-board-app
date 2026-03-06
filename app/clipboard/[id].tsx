@@ -13,7 +13,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Button } from "@/components/forms/Button";
 import { NotFound } from "@/components/ui/NotFound";
 import { useFetchQuery } from "@/hooks/useFetchQuery";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useToast } from "react-native-toast-notifications";
 import { useMutationQuery } from "@/hooks/useMutationQuery";
 import { BottomSheetModal, type BottomSheetModalMethods } from "@/components/ui/BottomSheetModal";
@@ -29,8 +29,8 @@ export default function CardPreview() {
     const { colors, isDark } = useThemeColor()
     const toast = useToast()
     const { mutate: deleteMutate, isPending: isPendingDelete, isError: isErrorDelete, isSuccess: isSucessDelete, data: dataDelete } = useMutationQuery(`clipboard/${id}`, "DELETE")
-    const { mutate: editMutate, isPending: isPendingEdit, isSuccess: isSuccessEdit, isError: isErrorEdit, data: dataEdit } = useMutationQuery<{content: string, type: SegmentedButtonType}, DefaultResponse>(`clipboard/${id}`, "PATCH")
-    const { mutate: favoriteMutate, isPending: isPendingFavorite, isSuccess: isSuccessFavorite, data: dataFavorite } = useMutationQuery(`favorite/${id}`, "PATCH")
+    const { mutate: editMutate, isPending: isPendingEdit, isSuccess: isSuccessEdit, isError: isErrorEdit, data: dataEdit } = useMutationQuery<{ content: string, type: SegmentedButtonType }, DefaultResponse>(`clipboard/${id}`, "PATCH")
+    const { mutate: favoriteMutate, isSuccess: isSuccessFavorite, isError: isErrorFavorite, data: dataFavorite, isPending: isPendingFavorite } = useMutationQuery(`favorite/${id}`, "PATCH")
     const queryClient = useQueryClient()
     const router = useRouter()
     const { dismiss } = useBottomSheetModal()
@@ -44,9 +44,9 @@ export default function CardPreview() {
     const handleOpenModal = () => {
         modalRef.current?.open()
     }
-    
+
     const handleEditClipboard = (content: string, type: SegmentedButtonType) => {
-        editMutate({content, type})     
+        editMutate({ content, type })
     }
 
     useEffect(() => {
@@ -86,25 +86,33 @@ export default function CardPreview() {
     }, [isErrorEdit, dataEdit, toast])
 
     useEffect(() => {
-        if (isSuccessFavorite && dataFavorite) {
-            toast.show(dataFavorite.message, {
-                type: dataFavorite.success ? "success" : "warning"
+        if (isErrorFavorite) {
+            toast.show("Erreur lors de la mise en favori", {
+                type: "danger"
             })
-            queryClient.invalidateQueries({ queryKey: ["all"] })
+            return
         }
 
-    }, [isSuccessFavorite, dataFavorite, toast])
+        if (isSuccessFavorite && dataFavorite?.success) {
+            queryClient.invalidateQueries({ queryKey: ["all"] })
+            queryClient.invalidateQueries({ queryKey: [`clipboard/${id}`] })
+        }
+    }, [isSuccessFavorite, dataFavorite, toast, isErrorFavorite])
 
     if (isError || (clipboardData && !clipboardData.success)) return <NotFound title="Aucun presse-papier trouvé" description="Cette donnée n'a pas été trouvée !" />
 
     return <SafeAreaView className="flex-1">
-        <CardPreviewHeader mutate={() => favoriteMutate()} />
         {isPending && <View className="flex-1 items-center justify-center">
             <ActivityIndicator size="large" color={colors.tagSourceIconColor} />
         </View>}
-        {
-            data &&
+
+        {data && 
             <>
+                <CardPreviewHeader 
+                    mutate={() => favoriteMutate()} 
+                    favorite={data.isFavorite} 
+                    starDisabled={isPendingFavorite}
+                />
                 <View className="p-4 flex-1">
                     <View className="flex-1">
                         <View className="flex-row items-start gap-2">
@@ -178,13 +186,13 @@ export default function CardPreview() {
                         </TouchableOpacity>
                         <TouchableOpacity
                             className={`flex-row gap-2 items-center justify-center rounded-3xl py-3 px-8 w-[48%] ${isDark ? "bg-red-400/20" : "bg-red-500/20"} ${isPendingDelete && "opacity-15"}`}
-                            activeOpacity={isPendingDelete ? .15 : .8}
+                            activeOpacity={isPendingDelete ? .15 : 1}
                             onPress={handleDelete}
                             disabled={isPendingDelete}
                         >
                             <Entypo name="trash" size={18} className={`${isDark ? "!text-red-400" : "!text-red-500"}`} />
                             <ThemedText
-                                className={`opacity-80 font-bold text-lg ${isDark ? "!text-red-400" : "!text-red-500"}`}>Supprimer</ThemedText>
+                                className={`font-bold text-lg ${isDark ? "!text-red-400" : "!text-red-500"}`}>Supprimer</ThemedText>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -198,6 +206,7 @@ export default function CardPreview() {
                 />
             </>
         }
+
     </SafeAreaView>
 }
 
