@@ -5,7 +5,7 @@ import { Data } from "@/types/types";
 import Feather from '@expo/vector-icons/Feather';
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SyncColor } from "@/constants/Colors";
-import React, { useRef, useCallback, useMemo } from "react";
+import React, { useRef, useCallback, useMemo, useEffect } from "react";
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView, useBottomSheetModal } from "@gorhom/bottom-sheet";
 import { CameraView } from "expo-camera";
 import { useToast } from "react-native-toast-notifications";
@@ -72,6 +72,10 @@ export function Devices() {
 
     const snapPoints = useMemo(() => ['95%'], [])
 
+    useEffect(() => {
+        console.log("Other device", otherDevices)
+    }, [otherDevices])
+
     return (
         <View style={{ flex: 1 }}>
             {/* Section d'en-tête avec le Titre et le bouton Ajouter */}
@@ -95,7 +99,7 @@ export function Devices() {
             {/* Section Liste des autres appareils */}
             <View className="mt-8" style={{ flex: 1 }}>
                 <ThemedText className="font-bold uppercase text-sm mb-4">Autre appareils</ThemedText>
-                {otherDevices && (
+                {otherDevices ? (
                     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 36, gap: 12 }}>
                         {otherDevices.map((device, index) => (
                             <DeviceItem
@@ -107,7 +111,7 @@ export function Devices() {
                             />
                         ))}
                     </ScrollView>
-                )}
+                ) : <ThemedText className="text-center opacity-80 font-bold uppercase text-[12px] mt-5">Aucun appareil connecté</ThemedText>}
             </View>
 
             {/* Modal du scanner QR */}

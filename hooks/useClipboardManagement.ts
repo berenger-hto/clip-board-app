@@ -11,6 +11,9 @@ import { useMutationQuery } from "./useMutationQuery";
 import { useFilterItem } from "./useFilterItem";
 
 export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | null>) {
+    const token = useAppStore(state => state.token)
+    const ip = useAppStore(state => state.ip)
+    
     const {
         data: clipboardData,
         isPending: isClipboardPending,
@@ -22,6 +25,7 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     } = useFetchQuery<{ data: Data[] }>("clipboard", undefined, {
         refetchOnWindowFocus: false,
         refetchOnMount: false,
+        enabled: !!ip && !!token
     })
     const { mutate: insertToClipboard } = useMutationQuery<{ content: string, type: string, source: string }>("clipboard", "POST")
     const filterIndicator = useAppStore(state => state.filterIndicator)
@@ -33,9 +37,6 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     const setIsRedirect = useAppStore(state => state.setIsRedirect)
     const queryClient = useQueryClient()
     const { socket, isConnected } = useSocketIO()
-
-    const token = useAppStore(state => state.token)
-    const ip = useAppStore(state => state.ip)
 
     const isFiltering = filterIndicator !== "ALL"
     const data = isFiltering ? filterData : clipboardData?.data
@@ -59,6 +60,11 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
             }, duration)
         }
     }, [data])
+
+    useEffect(() => {
+        if (!ip || !token) return 
+        refetch()
+    }, [ip, token])
 
     useEffect(() => {
         if (!ip || !token) return
@@ -131,8 +137,6 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
         refetch,
         isRefetching,
         isRefetchError,
-        token,
-        ip,
         clipboardData,
         scrollTopToRefetch
     }

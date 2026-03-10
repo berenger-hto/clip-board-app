@@ -31,6 +31,8 @@ export function useDeviceManagement() {
     const { dismiss } = useBottomSheetModal()
     const { isConnected } = useSocketIO()
     const queryClient = useQueryClient()
+    const setIp = useAppStore(state => state.setIp)
+    const setToken = useAppStore(state => state.setToken)
 
     // Mutation pour enregistrer cet appareil auprès du serveur d'un autre appareil
     const { mutate, isSuccess, data: responseData } = useMutationQuery<MobileDevice, DefaultResponse & { os: OS }>("me", "POST", () => {
@@ -47,9 +49,7 @@ export function useDeviceManagement() {
      */
     const loadDevices = useCallback(async () => {
         const devices = await getDevices()
-        if (devices) {
-            setOtherDevices(devices)
-        }
+        setOtherDevices(devices && devices.length > 0 ? devices : null)
     }, [getDevices])
 
     // Charger les appareils quand la base de données est prête
@@ -114,14 +114,18 @@ export function useDeviceManagement() {
             // Sauvegarder les détails de connexion
             setValue("ip", result.data.ip)
             setValue("token", result.data.token)
+            setIp(result.data.ip)
+            setToken(result.data.token)
 
             // Déclencher la mutation d'enregistrement
-            mutate({
-                deviceName: Device.deviceName ?? "Unknown",
-                deviceOSName: Device.osName ?? "Unknown",
-                deviceOSVersion: Device.osVersion ?? "Unknown",
-                ...result.data
-            })
+            setTimeout(() => {
+                mutate({
+                    deviceName: Device.deviceName ?? "Unknown",
+                    deviceOSName: Device.osName ?? "Unknown",
+                    deviceOSVersion: Device.osVersion ?? "Unknown",
+                    ...result.data
+                })
+            }, 300)
 
             onValid()
         } catch {

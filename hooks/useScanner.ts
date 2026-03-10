@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
 import { useCameraPermissions } from "expo-camera";
-import { useToast } from "react-native-toast-notifications";
 
 /**
  * Hook pour gérer les permissions de la caméra et l'état du scan de QR code.
@@ -8,7 +7,6 @@ import { useToast } from "react-native-toast-notifications";
 export function useScanner() {
     const [permission, requestPermission] = useCameraPermissions()
     const [scanned, setScanned] = useState(false)
-    const toast = useToast()
 
     // Demander la permission au montage si elle n'est pas déjà accordée
     useEffect(() => {
