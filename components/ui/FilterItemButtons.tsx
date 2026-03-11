@@ -30,6 +30,8 @@ const filterButtons: FilterType[] = [
 export function FilterItemButtons() {
     const filterIndicator = useAppStore(state => state.filterIndicator)
     const setFilterIndicator = useAppStore(state => state.setFilterIndicator)
+    const ip = useAppStore(state => state.ip)
+    const token = useAppStore(state => state.token)
 
     return <View className="h-30 pb-4">
         <ScrollView
@@ -44,6 +46,7 @@ export function FilterItemButtons() {
                         key={index}
                         active={button.indicator === filterIndicator}
                         onPress={() => setFilterIndicator(button.indicator)}
+                        disabled={!ip || !token}
                     >
                         {button.name}
                     </Button>

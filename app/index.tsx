@@ -9,12 +9,14 @@ import { View } from "@/components/View";
 import { ScrollView, useWindowDimensions } from "react-native";
 import { useEffect, useRef } from "react";
 import { Search } from "@/components/screens/Search";
+import { useSecureStore } from "@/hooks/useSecureStore";
 
 export default function App() {
     const tabActiveIndex = useAppStore(state => state.tabActiveIndex)
     const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
     const { width } = useWindowDimensions()
     const scrollRef = useRef<ScrollView>(null)
+    const { deleteValue } = useSecureStore()
 
     useEffect(() => {
         scrollRef.current?.scrollTo({ x: tabActiveIndex * width, animated: true })
@@ -27,6 +29,12 @@ export default function App() {
             setTabActiveIndex(index)
         }
     }
+    /*
+    useEffect(() => {
+        deleteValue("ip")
+        deleteValue("token")
+    }, [])
+    */
 
     return <SafeAreaView className="flex-1" edges={['top', 'left', 'right']}>
         <ScrollView

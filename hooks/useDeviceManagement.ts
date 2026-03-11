@@ -125,7 +125,7 @@ export function useDeviceManagement() {
                     deviceOSVersion: Device.osVersion ?? "Unknown",
                     ...result.data
                 })
-            }, 300)
+            }, 150)
 
             onValid()
         } catch {

@@ -138,6 +138,8 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
         isRefetching,
         isRefetchError,
         clipboardData,
-        scrollTopToRefetch
+        scrollTopToRefetch,
+        ip, 
+        token
     }
 }
