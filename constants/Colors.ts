@@ -73,3 +73,10 @@ export const SyncColor = {
     NO: "#ef4444",
     PENDING: "#f59e0b"
 }
+
+export const ToastColor = {
+    success: "#10b981",
+    error: "#ef4444",
+    warning: "#f59e0b",
+    info: "#7c3aed"
+}

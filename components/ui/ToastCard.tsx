@@ -2,14 +2,25 @@ import { ThemedText } from "@/components/ThemedText";
 import { View as NativeView } from "react-native";
 import { ToastProps } from "react-native-toast-notifications/lib/typescript/toast";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { ToastColor } from "@/constants/Colors";
 
 type Props = {
     toastOptions: ToastProps
 }
 
 export function ToastCard({ toastOptions }: Props) {
-    const { colors, isDark } = useThemeColor()
-    const { message } = toastOptions
+    
+    const { message, type } = toastOptions
+
+    return <NativeView
+        style={{
+            backgroundColor: ToastColor[type as keyof typeof ToastColor]
+        }}
+    >
+        <ThemedText className="text-[15px] font-semibold text-center leading-5">{message}</ThemedText>
+    </NativeView>
+
+    /*
 
     return (
         <NativeView
@@ -28,4 +39,5 @@ export function ToastCard({ toastOptions }: Props) {
             <ThemedText className="text-[15px] font-semibold text-center leading-5">{message}</ThemedText>
         </NativeView>
     )
+        */
 }

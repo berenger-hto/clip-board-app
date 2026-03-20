@@ -10,46 +10,16 @@ import { Data } from "@/types/types";
 import { ThemedText } from "@/components/ThemedText";
 import { Button } from "@/components/forms/Button";
 import { AddItemToClipboard } from "../ui/AddItemToClipboard";
-import { useQuery } from "@tanstack/react-query";
 
 export function Clipboard() {
 
     const listRef = useRef<FlashListRef<Data> | null>(null)
     const { data, isPending, isRefetching, refetch, token, ip, scrollTopToRefetch } = useClipboardManagement(listRef)
     const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
-    const { data: testData } = useQuery({
-        queryKey: ["clipboard"],
-        queryFn: async () => {
-            const response = await fetch(`http://192.168.1.106/clipboard`, {
-                headers: {
-                    "Authorization": `${token}`
-                }
-            })
-            const data = await response.json()
-            return data
-        }
-    })
-
-    const { data: testData2 } = useQuery({
-        queryKey: ["testss"],
-        queryFn: async () => {
-            const response = await fetch(`https://jsonplaceholder.typicode.com/posts/1`)
-            const data = await response.json()
-            return data
-        }
-    })
 
     return <>
         <View style={{ flex: 1 }}>
             <ClipboardHeader />
-            <ThemedText className="text-xs">
-                Local test
-                {JSON.stringify(testData)}
-            </ThemedText>
-            <ThemedText className="text-xs">
-                External test
-                {JSON.stringify(testData2)}
-            </ThemedText>
             <FlashList
                 className="flex-1 h-full"
                 ref={listRef}
