@@ -1,4 +1,4 @@
-import { useToast } from "react-native-toast-notifications"
+import { useToast } from "@/hooks/useToast"
 import { BottomSheetModal, BottomSheetModalMethods } from "./BottomSheetModal"
 import type { Data, SegmentedButtonType } from "@/types/types"
 import { useBottomSheetModal } from "@gorhom/bottom-sheet"

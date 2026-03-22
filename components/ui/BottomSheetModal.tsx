@@ -8,6 +8,7 @@ import { Textarea } from "@/components/forms/Textarea";
 import { Button } from "@/components/forms/Button";
 import { SegmentedButton } from "./SegmentedButton";
 import type { SegmentedButtonType } from "@/types/types";
+import { useSocketIO } from "@/hooks/useSocketIO";
 
 type Props = {
     title: string
@@ -25,11 +26,12 @@ export type BottomSheetModalMethods = {
 export function BottomSheetModal({ title, actionButtonTitle, handleAction, ref, inputValue, buttonDisabled }: Props) {
     const { colors } = useThemeColor()
     const bottomSheetModalRef = useRef<Modal>(null)
-    const snapPoints = useMemo(() => ['75%', '93%'], [])
+    const snapPoints = useMemo(() => ['75%'], [])
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present()
     }, [])
     const { dismiss } = useBottomSheetModal()
+    const { isConnected } = useSocketIO()
 
     const [segmentedButtonValue, setSegmentedButtonValue] = useState<SegmentedButtonType>("AUTO")
     const textValueRef = useRef(inputValue || "")
@@ -118,7 +120,7 @@ export function BottomSheetModal({ title, actionButtonTitle, handleAction, ref, 
                         className={`w-full h-16 ${buttonDisabled ? "opacity-50" : ""}`}
                         textClassName="!text-lg !font-semibold"
                         onPress={handlePressActionButton}
-                        disabled={buttonDisabled}
+                        disabled={buttonDisabled || !isConnected}
                         activeOpacity={buttonDisabled ? .5 : .8}
                     >
                         {actionButtonTitle}

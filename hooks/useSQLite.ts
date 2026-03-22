@@ -1,6 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import { useCallback } from 'react';
-import { useToast } from 'react-native-toast-notifications';
+import { useToast } from '@/hooks/useToast';
 import { OS } from '@/types/types';
 
 export function useSQLite() {

@@ -8,7 +8,7 @@ import { SyncColor } from "@/constants/Colors";
 import React, { useRef, useCallback, useMemo, useEffect } from "react";
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView, useBottomSheetModal } from "@gorhom/bottom-sheet";
 import { CameraView } from "expo-camera";
-import { useToast } from "react-native-toast-notifications";
+import { useToast } from "@/hooks/useToast";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import * as Device from 'expo-device'
 import { useScanner } from "@/hooks/useScanner";
@@ -150,12 +150,10 @@ export function Devices() {
                             size={300}
                             style={{
                                 flex: 1,
-                                justifyContent: "center",   
-                                alignItems: "center",
-                                opacity: .7,
                                 position: "absolute",
+                                alignSelf: "center",
                                 top: 210,
-                                left: 18
+                                opacity: .7
                             }}
                             color={colors.bottomSheetIndicatorColor}
                         />

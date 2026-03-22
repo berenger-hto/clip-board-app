@@ -1,5 +1,5 @@
 import { useFetchQuery } from "@/hooks/useFetchQuery";
-import { useToast } from "react-native-toast-notifications";
+import { useToast } from "@/hooks/useToast";
 import { useAppStore } from "@/hooks/useAppStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSocketIO } from "@/hooks/useSocketIO";
@@ -13,7 +13,7 @@ import { useFilterItem } from "./useFilterItem";
 export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | null>) {
     const token = useAppStore(state => state.token)
     const ip = useAppStore(state => state.ip)
-    
+
     const {
         data: clipboardData,
         isPending: isClipboardPending,
@@ -62,7 +62,7 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     }, [data])
 
     useEffect(() => {
-        if (!ip || !token) return 
+        if (!ip || !token) return
         refetch()
     }, [ip, token])
 
@@ -139,7 +139,7 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
         isRefetchError,
         clipboardData,
         scrollTopToRefetch,
-        ip, 
+        ip,
         token
     }
 }

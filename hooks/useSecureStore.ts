@@ -1,5 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
-import { useToast } from 'react-native-toast-notifications';
+import { useToast } from '@/hooks/useToast';
 import { useAppStore } from './useAppStore';
 
 export function useSecureStore() {

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { useToast } from "react-native-toast-notifications";
+import { useToast } from "@/hooks/useToast";
 import { z } from "zod";
 import * as Device from 'expo-device';
 import { DefaultResponse, MobileDevice, OS } from "@/types/types";

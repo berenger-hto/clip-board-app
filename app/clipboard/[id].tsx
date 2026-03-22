@@ -13,8 +13,8 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Button } from "@/components/forms/Button";
 import { NotFound } from "@/components/ui/NotFound";
 import { useFetchQuery } from "@/hooks/useFetchQuery";
-import { useEffect, useRef, useState } from "react";
-import { useToast } from "react-native-toast-notifications";
+import { useEffect, useRef } from "react";
+import { useToast } from "@/hooks/useToast";
 import { useMutationQuery } from "@/hooks/useMutationQuery";
 import { BottomSheetModal, type BottomSheetModalMethods } from "@/components/ui/BottomSheetModal";
 import type { DefaultResponse, SegmentedButtonType } from "@/types/types";
@@ -106,11 +106,11 @@ export default function CardPreview() {
             <ActivityIndicator size="large" color={colors.tagSourceIconColor} />
         </View>}
 
-        {data && 
+        {data &&
             <>
-                <CardPreviewHeader 
-                    mutate={() => favoriteMutate()} 
-                    favorite={data.isFavorite} 
+                <CardPreviewHeader
+                    mutate={() => favoriteMutate()}
+                    favorite={data.isFavorite}
                     starDisabled={isPendingFavorite}
                 />
                 <View className="p-4 flex-1">

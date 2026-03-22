@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useFetchQuery } from "./useFetchQuery";
 import { Data } from "@/types/types";
 import { useAppStore } from "./useAppStore";
-import { useToast } from "react-native-toast-notifications";
+import { useToast } from "@/hooks/useToast";
 import { useDebounce } from "./useDebounce";
 
 export function useSearchItem() {

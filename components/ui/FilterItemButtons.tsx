@@ -3,6 +3,7 @@ import { Button } from "@/components/forms/Button";
 import { ScrollView } from "react-native";
 import { useAppStore } from "@/hooks/useAppStore";
 import { FilterType } from "@/types/types";
+import { useSocketIO } from "@/hooks/useSocketIO";
 
 const filterButtons: FilterType[] = [
     {
@@ -30,9 +31,8 @@ const filterButtons: FilterType[] = [
 export function FilterItemButtons() {
     const filterIndicator = useAppStore(state => state.filterIndicator)
     const setFilterIndicator = useAppStore(state => state.setFilterIndicator)
-    const ip = useAppStore(state => state.ip)
-    const token = useAppStore(state => state.token)
-
+    const { isConnected } = useSocketIO()
+    
     return <View className="h-30 pb-4">
         <ScrollView
             horizontal
@@ -46,7 +46,7 @@ export function FilterItemButtons() {
                         key={index}
                         active={button.indicator === filterIndicator}
                         onPress={() => setFilterIndicator(button.indicator)}
-                        disabled={!ip || !token}
+                        disabled={!isConnected}
                     >
                         {button.name}
                     </Button>

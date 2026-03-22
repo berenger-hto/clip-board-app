@@ -4,6 +4,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ToastProvider } from "react-native-toast-notifications";
 import { ToastCard } from "@/components/ui/ToastCard";
+import { ToastQueueManager } from "@/hooks/useToast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import * as SQLite from 'expo-sqlite';
 import { useEffect, useState } from "react";
@@ -76,16 +77,17 @@ export default function RootLayout() {
     return <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
             <ToastProvider
-                placement="top"
-                duration={5000}
+                placement="bottom"
+                duration={4000}
                 animationType='slide-in'
-                animationDuration={250}
+                animationDuration={100}
                 offset={30}
-                offsetTop={60}
-                offsetBottom={40}
+                offsetTop={0}
+                offsetBottom={100}
                 swipeEnabled={true}
                 renderToast={(toastOptions) => <ToastCard toastOptions={toastOptions} />}
             >
+                <ToastQueueManager />
                 <GestureHandlerRootView style={{ flex: 1, backgroundColor: "transparent" }}>
                     <BottomSheetModalProvider>
                         <SQLite.SQLiteProvider databaseName="clipboard.db" onInit={migrateDbIfNeeded}>

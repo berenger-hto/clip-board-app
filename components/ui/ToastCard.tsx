@@ -1,43 +1,32 @@
-import { ThemedText } from "@/components/ThemedText";
-import { View as NativeView } from "react-native";
+import { View as NativeView, Text as NativeText } from "react-native";
 import { ToastProps } from "react-native-toast-notifications/lib/typescript/toast";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { ToastColor } from "@/constants/Colors";
+import { Image } from "expo-image";
 
 type Props = {
     toastOptions: ToastProps
 }
 
 export function ToastCard({ toastOptions }: Props) {
-    
-    const { message, type } = toastOptions
+    const { message } = toastOptions
+    const { isDark } = useThemeColor()
 
     return <NativeView
         style={{
-            backgroundColor: ToastColor[type as keyof typeof ToastColor]
+            backgroundColor: isDark ? "rgba(255, 255, 255, .8)" : "rgba(48, 48, 48, .8)",
+            alignSelf: "center",
+            elevation: 2,
         }}
+        className="px-5 py-2.5 rounded-full flex-row gap-2 items-center justify-center m-4"
     >
-        <ThemedText className="text-[15px] font-semibold text-center leading-5">{message}</ThemedText>
+        <Image
+            source={isDark ? require("@/assets/images/toast-icon-dark.png") : require("@/assets/images/toast-icon.png")}
+            style={{ width: 18, height: 18 }}
+        />
+        <NativeText
+            style={{ color: isDark ? "#000" : "#fff" }}
+            className="text-[14px] font-medium text-center">
+            {message}
+        </NativeText>
     </NativeView>
-
-    /*
-
-    return (
-        <NativeView
-            style={{
-                backgroundColor: colors.box,
-                borderColor: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.08)",
-                borderWidth: 1,
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: isDark ? 0.4 : 0.1,
-                shadowRadius: 10,
-                elevation: 4,
-            }}
-            className="px-6 py-3.5 rounded-2xl items-center justify-center min-w-[140px] m-2"
-        >
-            <ThemedText className="text-[15px] font-semibold text-center leading-5">{message}</ThemedText>
-        </NativeView>
-    )
-        */
 }
