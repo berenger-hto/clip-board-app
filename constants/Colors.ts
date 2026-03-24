@@ -1,3 +1,5 @@
+// Add switch and ActivityIndicator colors
+
 export const Colors = {
     dark: {
         primary: "#7c3aed",
@@ -15,7 +17,7 @@ export const Colors = {
         tagSourceBorderColor: "rgba(124, 58, 237, 0.15)",
         switchNotActiveColor: "#1e1b4b",
         segmentedButtonsContainerBackground: "#120e1a",
-        bottomSheetIndicatorColor: "rgba(255, 255, 255, 0.2)"
+        bottomSheetIndicatorColor: "rgba(255, 255, 255, 0.2)",
     },
     light: {
         primary: "#7c3aed",
@@ -73,14 +75,3 @@ export const SyncColor = {
     NO: "#ef4444",
     PENDING: "#f59e0b"
 }
-
-/*
-export const ToastColor = {
-    background: {
-        success: "#16a34a",
-        danger: "#ef4444",
-        warning: "#f59e0b",
-        info: "#7c3aed"
-    }
-}
-*/
