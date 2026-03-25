@@ -51,7 +51,7 @@ export default function CardPreview() {
 
     useEffect(() => {
         if (isErrorDelete) {
-            toast.show("Erreur lors de la suppression", {
+            toast.show("Erreur de suppression", {
                 type: "danger"
             })
             return
@@ -69,7 +69,7 @@ export default function CardPreview() {
 
     useEffect(() => {
         if (isErrorEdit) {
-            toast.show("Erreur lors de la mise à jour", {
+            toast.show("Erreur de mise à jour", {
                 type: "danger"
             })
             return
@@ -87,7 +87,7 @@ export default function CardPreview() {
 
     useEffect(() => {
         if (isErrorFavorite) {
-            toast.show("Erreur lors de la mise en favori", {
+            toast.show("Erreur de mise en favoris", {
                 type: "danger"
             })
             return
@@ -166,7 +166,7 @@ export default function CardPreview() {
                 <View className="mb-6 p-4">
                     <Button
                         active
-                        icon={<Feather name="copy" size={18} color={"#fff"} />}
+                        icon={<Feather name="copy" size={18} color={colors.background} />}
                         className="w-full h-16"
                         textClassName="!text-lg !font-semibold"
                         style={{ borderRadius: 50 }}

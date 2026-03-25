@@ -34,7 +34,7 @@ export function AddItemToClipboard() {
 
     useEffect(() => {
         if (isError) {
-            toast.show("Erreur lors de l'ajout", {
+            toast.show("Erreur d'ajout", {
                 type: "danger"
             })
             return
@@ -68,14 +68,15 @@ export function AddItemToClipboard() {
             activeOpacity={.9}
             onPress={handleOpenModal}
         >
-            <Feather name="plus" size={20} color={"#fff"} />
+            <Feather name="plus" size={20} color={colors.background} />
         </TouchableOpacity>
 
         <BottomSheetModal
             ref={modalRef}
             title="Ajouter au presse-papier"
             handleAction={handleAddToClipboard}
-            actionButtonTitle="Ajouter au presse-papier"
+            actionButtonTitle={isPending ? "En cours" : "Ajouter au presse-papier"}
+            buttonDisabled={isPending}
         />
     </>
 

@@ -47,7 +47,7 @@ export function Devices() {
      */
     const handlePresentModalPress = useCallback(() => {
         if (!permission?.granted) {
-            toast.show("Autorisez l'accès à votre camera", { type: "warning" })
+            toast.show("Autorisez l'accès à la camera", { type: "warning" })
             requestPermission()
             return
         }

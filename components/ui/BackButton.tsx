@@ -12,6 +12,10 @@ export function BackButton({ handleGoBack }: Props) {
     const router = useRouter()
 
     const handleGoBackFn = () => {
+        if (router.canGoBack()) {
+            router.back()
+            return
+        }
         router.push("/")
     }
 

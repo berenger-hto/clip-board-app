@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/useToast';
 import { OS } from '@/types/types';
 
 export function useSQLite() {
-    const db = SQLite.useSQLiteContext();
+    const db = SQLite.useSQLiteContext()
     const toast = useToast()
 
     const getDevices = useCallback(async () => {
@@ -14,7 +14,7 @@ export function useSQLite() {
             return result
         } catch (e) {
             console.error(e)
-            toast.show("Echec de récupération des appareils", {
+            toast.show("Echec: Récupération des appareils", {
                 type: "danger"
             })
             return null
@@ -33,7 +33,7 @@ export function useSQLite() {
             return result
         } catch (e) {
             console.error(e)
-            toast.show("Echec de récupération des appareils", {
+            toast.show("Echec: Récupération des appareils", {
                 type: "danger"
             })
             return null
@@ -54,7 +54,7 @@ export function useSQLite() {
             console.log(result)
         } catch (e) {
             console.error(e)
-            toast.show("Echec d'ajout de l'appareil", {
+            toast.show("Echec: Ajout de l'appareil", {
                 type: "danger"
             })
         } finally {
@@ -72,7 +72,7 @@ export function useSQLite() {
             console.log(result)
         } catch (e) {
             console.error(e)
-            toast.show("Echec d'ajout du contenu", {
+            toast.show("Echec: Ajout du contenu", {
                 type: "danger"
             })
         } finally {

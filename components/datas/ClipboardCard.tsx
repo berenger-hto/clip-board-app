@@ -22,7 +22,7 @@ type Props = ViewProps & {
 export const ClipboardCard = memo(function ClipboardCard({ data, className, style, ...rest }: Props) {
     const { colors, isDark } = useThemeColor()
     const copy = useAddToClipboard()
-    const headerTextColor = isDark ? "#94a3b8" : "#64748b"
+    const headerTextColor = colors.iconColor
     const { type, createdAt, source, value, id } = data
     const router = useRouter()
     const handleShareItem = (e: GestureResponderEvent) => {
@@ -35,13 +35,14 @@ export const ClipboardCard = memo(function ClipboardCard({ data, className, styl
         <View
             style={[style, {
                 backgroundColor: colors.box,
+                borderColor: colors.borderNavColor,
                 elevation: 1,
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 1 },
                 shadowOpacity: 0.18,
                 shadowRadius: 1.0
             }]}
-            className={clsx(`p-4 rounded-3xl border ${isDark ? "border-slate-800" : "border-slate-200"}`, className)}
+            className={clsx("p-4 rounded-3xl border", className)}
             {...rest}
         >
             {/* CardPreviewHeader */}
@@ -113,8 +114,9 @@ const DataObj = memo(function DataObj({ data, type }: { data: string, type: Data
         {
             type === "CODE" &&
             <View
-                className={`"bg-slate-50 p-3 rounded-lg border border-slate-100 ${isDark && "!bg-[#111618] !border-slate-800"}`}>
-                <Text style={{ color: colors.primary }} className="text-xs font-mono leading-relaxed">
+                style={{ backgroundColor: colors.tagSourceBackground, borderColor: colors.tagSourceBorderColor }}
+                className="p-3 rounded-lg border">
+                <Text style={{ color: colors.textPrimary }} className="text-xs font-mono leading-relaxed">
                     {data}
                 </Text>
             </View>

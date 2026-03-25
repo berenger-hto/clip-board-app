@@ -1,40 +1,38 @@
-// Add switch and ActivityIndicator colors
-
 export const Colors = {
     dark: {
-        primary: "#7c3aed",
-        background: "#0a0510",
-        card: "#120e1a",
-        textPrimary: "#f1f5f9",
-        box: "#181423",
-        iconColor: "#94a3b8",
-        navColor: "rgba(10, 5, 16, 0.85)",
-        borderNavColor: "#1e1b4b",
+        primary: "#ffffff",
+        background: "#000000",
+        card: "#18181b",
+        textPrimary: "#ffffff",
+        box: "#27272a",
+        iconColor: "#a1a1aa",
+        navColor: "rgba(0, 0, 0, 0.85)",
+        borderNavColor: "#3f3f46",
         shadowNavColor: "rgba(0, 0, 0, 0.6)",
-        tagSourceBackground: "#181423",
-        tagSourceColor: "#e2e8f0",
-        tagSourceIconColor: "#94a3b8",
-        tagSourceBorderColor: "rgba(124, 58, 237, 0.15)",
-        switchNotActiveColor: "#1e1b4b",
-        segmentedButtonsContainerBackground: "#120e1a",
+        tagSourceBackground: "#27272a",
+        tagSourceColor: "#ffffff",
+        tagSourceIconColor: "#a1a1aa",
+        tagSourceBorderColor: "rgba(255, 255, 255, 0.15)",
+        switchNotActiveColor: "#3f3f46",
+        segmentedButtonsContainerBackground: "#18181b",
         bottomSheetIndicatorColor: "rgba(255, 255, 255, 0.2)",
     },
     light: {
-        primary: "#7c3aed",
-        background: "#f5f7f8",
+        primary: "#000000",
+        background: "#fafafa",
         card: "#ffffff",
-        textPrimary: "#0f172a",
+        textPrimary: "#000000",
         box: "#ffffff",
-        iconColor: "#64748b",
-        navColor: "rgba(255, 255, 255, 0.94)",
-        borderNavColor: "#e2e8f0",
+        iconColor: "#71717a",
+        navColor: "rgba(250, 250, 250, 0.94)",
+        borderNavColor: "#e4e4e7",
         shadowNavColor: "rgba(0, 0, 0, 0.1)",
-        tagSourceBackground: "#f1f5f9",
-        tagSourceColor: "#1e293b",
-        tagSourceIconColor: "#64748b",
-        tagSourceBorderColor: "#e2e8f0",
-        switchNotActiveColor: "rgba(124, 58, 237, 0.2)",
-        segmentedButtonsContainerBackground: "rgba(226, 232, 240, 0.5)",
+        tagSourceBackground: "#f4f4f5",
+        tagSourceColor: "#000000",
+        tagSourceIconColor: "#71717a",
+        tagSourceBorderColor: "#e4e4e7",
+        switchNotActiveColor: "rgba(0, 0, 0, 0.2)",
+        segmentedButtonsContainerBackground: "rgba(228, 228, 231, 0.5)",
         bottomSheetIndicatorColor: "rgba(0, 0, 0, 0.2)"
     }
 }
@@ -42,36 +40,36 @@ export const Colors = {
 export const TagColor = {
     dark: {
         URL: {
-            background: "rgba(124, 58, 237, 0.15)",
-            color: "#a78bfa"
+            background: "rgba(255, 255, 255, 0.1)",
+            color: "#ffffff"
         },
         CODE: {
-            background: "rgba(139, 92, 246, 0.15)",
-            color: "#c4b5fd"
+            background: "rgba(255, 255, 255, 0.15)",
+            color: "#d4d4d8"
         },
         TEXT: {
-            background: "rgba(148, 163, 184, 0.15)",
-            color: "#cbd5e1"
+            background: "rgba(255, 255, 255, 0.05)",
+            color: "#a1a1aa"
         }
     },
     light: {
         URL: {
-            background: "#ede9fe",
-            color: "#7c3aed"
+            background: "rgba(0, 0, 0, 0.05)",
+            color: "#000000"
         },
         CODE: {
-            background: "#f5f3ff",
-            color: "#8b5cf6"
+            background: "rgba(0, 0, 0, 0.08)",
+            color: "#3f3f46"
         },
         TEXT: {
-            background: "#f1f5f9",
-            color: "#475569"
+            background: "rgba(0, 0, 0, 0.03)",
+            color: "#71717a"
         }
     }
 }
 
 export const SyncColor = {
     OK: "#10b981",
-    NO: "#ef4444",
+    NO: "#e11d48",
     PENDING: "#f59e0b"
 }

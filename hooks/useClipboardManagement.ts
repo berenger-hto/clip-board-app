@@ -70,7 +70,7 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
         if (!ip || !token) return
 
         if (isError || isRefetchError) {
-            toast.show("Le logiciel serveur est injoignable", {
+            toast.show("Serveur indisponible", {
                 type: "danger"
             })
         }
