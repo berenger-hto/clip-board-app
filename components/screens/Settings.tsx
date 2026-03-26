@@ -3,7 +3,6 @@ import { ThemedText } from "@/components/ThemedText";
 import { View } from "@/components/View";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import Feather from '@expo/vector-icons/Feather';
-import { useState } from "react";
 import { Text as NativeText, View as NativeView, Pressable, Switch, TextProps } from "react-native";
 import { useAppStore } from "@/hooks/useAppStore";
 
@@ -116,7 +115,15 @@ function Preference({ preference, active, setActive }: PreferenceProps) {
             </NativeView>
             <ThemedText className="font-semibold text-lg">{preference.name}</ThemedText>
         </NativeView>
-        <Switch value={active} onValueChange={setActive} />
+        <Switch 
+            value={active} 
+            onValueChange={setActive} 
+            thumbColor={colors.primary} 
+            trackColor={{
+                true: colors.tagSourceIconColor,
+                false: colors.tagSourceBorderColor
+            }} 
+        />
     </Pressable>
 }
 

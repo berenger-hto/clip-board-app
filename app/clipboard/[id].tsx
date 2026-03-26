@@ -103,7 +103,7 @@ export default function CardPreview() {
 
     return <SafeAreaView className="flex-1">
         {isPending && <View className="flex-1 items-center justify-center">
-            <ActivityIndicator size="large" color={colors.tagSourceIconColor} />
+            <ActivityIndicator size="large" color={colors.primary} />
         </View>}
 
         {data &&

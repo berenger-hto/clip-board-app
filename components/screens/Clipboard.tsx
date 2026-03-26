@@ -10,12 +10,14 @@ import { Data } from "@/types/types";
 import { ThemedText } from "@/components/ThemedText";
 import { Button } from "@/components/forms/Button";
 import { AddItemToClipboard } from "../ui/AddItemToClipboard";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 export function Clipboard() {
 
     const listRef = useRef<FlashListRef<Data> | null>(null)
     const { data, isPending, isRefetching, refetch, token, ip, scrollTopToRefetch } = useClipboardManagement(listRef)
     const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
+    const { colors } = useThemeColor()
 
     return <>
         <View style={{ flex: 1 }}>
@@ -28,7 +30,7 @@ export function Clipboard() {
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={
                     (token && ip && isPending) ? (
-                        <ActivityIndicator size="large" />
+                        <ActivityIndicator size="large" color={colors.primary} />
                     ) : (
                         <View className="items-center justify-center">
                             <ThemedText className="text-center text-xl font-bold mt-10 opacity-80 mb-4">

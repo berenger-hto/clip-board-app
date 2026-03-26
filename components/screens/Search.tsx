@@ -70,7 +70,7 @@ export function Search() {
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={
                     <View className="-mt-4">
-                        {isLoading ? <ActivityIndicator size="large" className="mt-4" /> :
+                        {isLoading ? <ActivityIndicator size="large" color={colors.primary} className="mt-4" /> :
                             isOfflineMode && !storedData ? 
                                 <ThemedText className="text-center text-xl font-bold mt-10 opacity-80 mb-4">
                                     Recherche hors ligne impossible
