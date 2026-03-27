@@ -35,6 +35,7 @@ function InitializeApp() {
     const setToken = useAppStore(state => state.setToken)
     const setAppTheme = useAppStore(state => state.setAppTheme)
     const setData = useAppStore(state => state.setData)
+    const setStarted = useAppStore(state => state.setStarted)
     const { getValue } = useSecureStore()
     const colorScheme = useColorScheme() ?? "dark"
     const [enabled, setEnabled] = useState(false)
@@ -46,10 +47,12 @@ function InitializeApp() {
             try {
                 const savedIp = await getValue("ip")
                 const savedToken = await getValue("token")
+                const started = await getValue("started")
                 setIp(savedIp)
                 setToken(savedToken)
                 setAppTheme(colorScheme)
                 setEnabled(true)
+                setStarted(!!started)
             } catch (error) {
                 console.error("Erreur lors de l'initialisation du store:", error)
             }
@@ -104,6 +107,12 @@ export default function RootLayout() {
                                         animation: 'fade_from_bottom',
                                         presentation: 'transparentModal'
                                     }}
+                                />
+                                <Stack.Screen name="about" 
+                                    options={{
+                                        animation: 'slide_from_right',
+                                        presentation: 'transparentModal'
+                                    }} 
                                 />
                             </Stack>
                         </SQLite.SQLiteProvider>

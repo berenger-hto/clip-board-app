@@ -20,7 +20,7 @@ type Props = ViewProps & {
 }
 
 export const ClipboardCard = memo(function ClipboardCard({ data, className, style, ...rest }: Props) {
-    const { colors, isDark } = useThemeColor()
+    const { colors } = useThemeColor()
     const copy = useAddToClipboard()
     const headerTextColor = colors.iconColor
     const { type, createdAt, source, value, id } = data

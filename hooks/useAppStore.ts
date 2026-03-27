@@ -13,7 +13,8 @@ export const useAppStore = create(
             token: null as string | null,
             soundOfCopy: true,
             data: null as Data[] | null,
-            filterIndicator: "ALL" as FilterType["indicator"]
+            filterIndicator: "ALL" as FilterType["indicator"],
+            started: false
         },
         (set) => (
             {
@@ -25,7 +26,8 @@ export const useAppStore = create(
                 setToken: (token: string | null) => set({ token }),
                 setSoundOfCopy: (soundOfCopy: boolean) => set({ soundOfCopy }),
                 setData: (data: Data[] | null) => set({ data }),
-                setFilterIndicator: (filterIndicator: FilterType["indicator"]) => set({ filterIndicator })
+                setFilterIndicator: (filterIndicator: FilterType["indicator"]) => set({ filterIndicator }),
+                setStarted: (started: boolean) => set({ started })
             }
         )
     )

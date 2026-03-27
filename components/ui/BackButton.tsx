@@ -1,15 +1,15 @@
 import Entypo from "@expo/vector-icons/Entypo";
 import {Pressable} from "react-native";
 import {useThemeColor} from "@/hooks/useThemeColor";
-import {useRouter} from "expo-router";
+import { router } from "expo-router";
 
 type Props = {
     handleGoBack?: () => void
+    size?: number
 }
 
-export function BackButton({ handleGoBack }: Props) {
+export function BackButton({ handleGoBack, size = 30 }: Props) {
     const { isDark } = useThemeColor()
-    const router = useRouter()
 
     const handleGoBackFn = () => {
         if (router.canGoBack()) {
@@ -20,6 +20,6 @@ export function BackButton({ handleGoBack }: Props) {
     }
 
     return <Pressable onPress={handleGoBack ? handleGoBack : handleGoBackFn}>
-        <Entypo name="chevron-left" size={30} color={isDark ? "#94a3b8" : "#475569"} />
+        <Entypo name="chevron-left" size={size} color={isDark ? "#94a3b8" : "#475569"} />
     </Pressable>
 }

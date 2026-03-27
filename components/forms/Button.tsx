@@ -7,11 +7,12 @@ type Props = TouchableOpacityProps & {
     children?: string
     active?: boolean
     icon?: ReactNode
+    iconPosition?: "left" | "right"
     textClassName?: string
     textStyle?: TextStyle
 }
 
-export function Button({ children, className, active, icon, textClassName, textStyle, style, ...rest }: Props) {
+export function Button({ children, className, active, icon, textClassName, textStyle, style, iconPosition = "left", ...rest }: Props) {
     const { colors } = useThemeColor()
 
     return <TouchableOpacity
@@ -26,11 +27,12 @@ export function Button({ children, className, active, icon, textClassName, textS
         activeOpacity={.8}
         {...rest}
     >
-        {icon}
+        {iconPosition === "left" && icon}
         {children && <Text
             className={clsx(`text-base font-medium text-center ${icon && "relative -top-[1px]"}`, textClassName)}
             style={[textStyle, { color: active ? colors.background : colors.textPrimary }]}>
             {children}
         </Text>}
+        {iconPosition === "right" && icon}
     </TouchableOpacity>
 }
