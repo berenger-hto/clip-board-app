@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { useAppStore } from "./useAppStore"
 import { useFetchQuery } from "./useFetchQuery"
 import { Data } from "@/types/types"
-import { useSocketIO } from "./useSocketIO"
 
 export function useFilterItem() {
     const filterIndicator = useAppStore(state => state.filterIndicator)

@@ -1,18 +1,19 @@
 import { SafeAreaView } from "@/components/SafeAreaView"
 import { ThemedText } from "@/components/ThemedText"
 import { View } from "@/components/View"
+import { useHandleGoBack } from "@/hooks/useHandleGoBack"
 import { useThemeColor } from "@/hooks/useThemeColor"
 import Feather from "@expo/vector-icons/Feather"
-import { useRouter } from "expo-router"
 import { ScrollView, TouchableOpacity } from "react-native"
 
 export default function About() {
     const { colors } = useThemeColor()
-    const router = useRouter()
+    const handleGoBack = useHandleGoBack()
+
     return <SafeAreaView className="flex-1">
         <View className="mt-4 px-4">
             
-            <TouchableOpacity className="flex-row items-center gap-2 pb-4" activeOpacity={.8} onPress={() => router.back()}>
+            <TouchableOpacity className="flex-row items-center gap-2 pb-4" activeOpacity={.8} onPress={handleGoBack}>
                 <Feather name="chevron-left" size={24} color={colors.textPrimary} />
                 <ThemedText className="text-base font-bold">A propos</ThemedText>
             </TouchableOpacity>

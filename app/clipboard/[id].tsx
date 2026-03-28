@@ -21,6 +21,7 @@ import type { DefaultResponse, SegmentedButtonType } from "@/types/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useBottomSheetModal } from "@gorhom/bottom-sheet";
 import { useAddToClipboard } from "@/hooks/useAddToClipboard";
+import { useHandleGoBack } from "@/hooks/useHandleGoBack";
 
 export default function CardPreview() {
     const { id } = useLocalSearchParams()
@@ -45,6 +46,8 @@ export default function CardPreview() {
         modalRef.current?.open()
     }
 
+    const handleGoBack = useHandleGoBack()
+
     const handleEditClipboard = (content: string, type: SegmentedButtonType) => {
         editMutate({ content, type })
     }
@@ -54,6 +57,7 @@ export default function CardPreview() {
             toast.show("Erreur de suppression", {
                 type: "danger"
             })
+            handleGoBack()
             return
         }
 
@@ -61,7 +65,7 @@ export default function CardPreview() {
             toast.show(dataDelete.message, {
                 type: dataDelete.success ? "success" : "warning"
             })
-            router.push("/")
+            handleGoBack()
             queryClient.invalidateQueries({ queryKey: ["all"] })
         }
 
@@ -72,6 +76,7 @@ export default function CardPreview() {
             toast.show("Erreur de mise à jour", {
                 type: "danger"
             })
+            handleGoBack()
             return
         }
 
@@ -79,8 +84,14 @@ export default function CardPreview() {
             toast.show(dataEdit.message, {
                 type: dataEdit.success ? "success" : "warning"
             })
-            queryClient.invalidateQueries({ queryKey: [`clipboard/${id}`] })
-            queryClient.invalidateQueries({ queryKey: ["all"] })
+
+            if (dataEdit.success) {
+                queryClient.invalidateQueries({ queryKey: [`clipboard/${id}`] })
+                queryClient.invalidateQueries({ queryKey: ["all"] })
+            } else {
+                handleGoBack()
+            }
+            
             dismiss()
         }
     }, [isErrorEdit, dataEdit, toast])
@@ -99,7 +110,7 @@ export default function CardPreview() {
         }
     }, [isSuccessFavorite, dataFavorite, toast, isErrorFavorite])
 
-    if (isError || (clipboardData && !clipboardData.success)) return <NotFound title="Aucun presse-papier trouvé" description="Cette donnée n'a pas été trouvée !" />
+    if (isError || (clipboardData && !clipboardData.success)) return <NotFound title="Oops !" description="Cette donnée n'a pas été retrouvée" />
 
     return <SafeAreaView className="flex-1">
         {isPending && <View className="flex-1 items-center justify-center">
@@ -157,8 +168,8 @@ export default function CardPreview() {
                                 style={{ color: colors.tagSourceColor }}
                                 className="text-sm pr-6"
                             >
-                                L'information a été automatiquement synchronisée avec votre ordinateur.
-                                Il est disponible sur tout vos appareils mobiles connectés.
+                                Cette information a été automatiquement synchronisée avec ton ordinateur. 
+                                Elle est maintenant disponible sur tous tes appareils connectés.
                             </Text>
                         </View>
                     </View>

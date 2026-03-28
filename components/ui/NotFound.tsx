@@ -28,7 +28,7 @@ export function NotFound({ title, description, handleGoBack }: Props) {
             <ThemedText className="text-center font-xl" style={{color: colors.tagSourceColor}}>
                 {description ? description : "Cette donnée n'existe plus dans le presse-papier."}
             </ThemedText>
-            <Button active onPress={handleGoBack ? handleGoBack : () => router.push("/")}>Retour</Button>
+            <Button active className="mt-3" onPress={handleGoBack ? handleGoBack : () => router.push("/")}>Retour</Button>
         </View>
     </SafeAreaView>
 }

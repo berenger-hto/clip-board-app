@@ -84,6 +84,7 @@ export function useDeviceManagement() {
                         setIsRedirect(true)
                         setTabActiveIndex(0)
                     })
+                queryClient.invalidateQueries({ queryKey: ["clipboard", "all"] })
             }
         }
     }, [isSuccess, responseData, addDevice, loadDevices, toast])
