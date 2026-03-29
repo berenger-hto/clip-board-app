@@ -31,6 +31,7 @@ export function Input({ className, style, label, labelStyle, inputRef, ...rest }
             multiline={false}
             numberOfLines={1}
             ref={inputRef}
+            selectionColor={colors.primary}
             {...rest}
         />
     </View>
