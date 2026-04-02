@@ -40,7 +40,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-camera",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow ClipboardX to access your camera",
+          "microphonePermission": "Allow ClipboardX to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ],
       [
         "expo-sqlite",
         {
@@ -57,22 +64,6 @@
         {
           "configureAndroidBackup": true,
           "faceIDPermission": "Allow ClipboardX to access your Face ID biometric data."
-        }
-      ],
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "dark": {
-            "backgroundColor": "#000000",
-            "image": "./assets/images/splash-icon-dark.png"
-          },
-          "cameraPermission": "Allow ClipboardX to access your camera",
-          "microphonePermission": "Allow ClipboardX to access your microphone",
-          "recordAudioAndroid": true
         }
       ],
       [

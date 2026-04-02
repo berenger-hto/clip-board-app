@@ -4,6 +4,7 @@ import { useAppStore } from "@/hooks/useAppStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSocketIO } from "@/hooks/useSocketIO";
 import { RefObject, useCallback, useEffect, useRef } from "react";
+import { AppState } from "react-native";
 import { FlashListRef } from "@shopify/flash-list";
 import { Data } from "@/types/types";
 import * as Clipboard from "expo-clipboard"
@@ -27,6 +28,7 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
         refetchOnMount: false,
         enabled: !!ip && !!token
     })
+    
     const { mutate: insertToClipboard } = useMutationQuery<{ content: string, type: string, source: string }>("clipboard", "POST")
     const filterIndicator = useAppStore(state => state.filterIndicator)
 
@@ -64,7 +66,11 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     useEffect(() => {
         if (!ip || !token) return
         refetch()
-    }, [ip, token])
+
+        if (isConnected) {
+            scrollTopToRefetch(1000)
+        }
+    }, [ip, token, isConnected])
 
     useEffect(() => {
         if (!ip || !token) return
@@ -88,17 +94,45 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     }, [clipboardData, isPending, isSuccess, isError, isRedirect, ip, token])
 
     const initialSyncDone = useRef(false)
+    const lastCopiedValue = useRef("")
 
-    useEffect(() => {
-        if (!ip || !token || !isConnected || !autoSync || initialSyncDone.current || !isConnected) return
-
-        initialSyncDone.current = true
-        Clipboard.getStringAsync().then(value => {
-            if (value) {
+    const syncClipboard = useCallback(async () => {
+        if (!ip || !token || !isConnected || !autoSync) return
+        
+        try {
+            const value = await Clipboard.getStringAsync()
+            if (value && value !== lastCopiedValue.current) {
+                lastCopiedValue.current = value;
                 insertToClipboard({ content: value, type: "AUTO", source: "Mobile" })
             }
+        } catch (e) {
+            console.error("Erreur lors de l'insertion", e);
+        }
+    }, [ip, token, isConnected, autoSync, insertToClipboard])
+
+    useEffect(() => {
+        if (!ip || !token || !isConnected || !autoSync) return
+
+        if (!initialSyncDone.current) {
+            initialSyncDone.current = true
+            syncClipboard()
+        }
+
+        const appStateSubscription = AppState.addEventListener("change", (nextAppState) => {
+            if (nextAppState === "active") {
+                syncClipboard()
+            }
         })
-    }, [ip, token, isConnected, autoSync, insertToClipboard, isConnected])
+
+        const clipboardSubscription = Clipboard.addClipboardListener(() => {
+            syncClipboard()
+        })
+
+        return () => {
+            appStateSubscription.remove();
+            Clipboard.removeClipboardListener(clipboardSubscription)
+        }
+    }, [ip, token, isConnected, autoSync, syncClipboard]);
 
     useEffect(() => {
         if (!socket || !autoSync || isOffline) return
@@ -115,12 +149,6 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
             socket.off("clipboard", handleClipboard)
         }
     }, [socket, autoSync, refetch])
-
-    useEffect(() => {
-        if (!isConnected || !data) return
-        refetch()
-        scrollTopToRefetch(1000)
-    }, [isConnected, data])
 
     useEffect(() => {
         if (shouldScroll.current && data && data.length > 0 && !isRefetching) {

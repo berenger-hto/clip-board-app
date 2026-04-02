@@ -108,11 +108,11 @@ export default function RootLayout() {
                                         presentation: 'transparentModal'
                                     }}
                                 />
-                                <Stack.Screen name="about" 
+                                <Stack.Screen name="about"
                                     options={{
                                         animation: 'slide_from_right',
                                         presentation: 'transparentModal'
-                                    }} 
+                                    }}
                                 />
                             </Stack>
                         </SQLite.SQLiteProvider>
