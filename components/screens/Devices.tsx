@@ -16,6 +16,7 @@ import { useDeviceManagement } from "@/hooks/useDeviceManagement";
 import { useSocketIO } from "@/hooks/useSocketIO";
 import { useBackHandler } from "@/hooks/useBackHandler";
 import { useBackAction } from "@/hooks/useBackAction";
+import { useAppStore } from "@/hooks/useAppStore";
 
 /**
  * Propriétés pour le composant DeviceItem.
@@ -74,6 +75,8 @@ export function Devices() {
 
     const snapPoints = useMemo(() => ['95%'], [])
     const [isOpen, setIsOpen] = useState(false)
+    const firstStart = useAppStore(state => state.firstStart)
+    const setFirstStart = useAppStore(state => state.setFirstStart)
 
     useEffect(() => {
         console.log("Other device", otherDevices)
@@ -86,6 +89,15 @@ export function Devices() {
         }
         return false
     })
+
+    useEffect(() => {
+        if (!firstStart || !permission) return
+        const timeOut = setTimeout(() => {
+            handlePresentModalPress()
+            setFirstStart(false)
+        }, 500)
+        return () => clearTimeout(timeOut)
+    }, [firstStart, permission, handlePresentModalPress, setFirstStart])
 
     useBackAction()
 

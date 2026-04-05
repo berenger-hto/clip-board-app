@@ -14,7 +14,8 @@ export const useAppStore = create(
             soundOfCopy: true,
             data: null as Data[] | null,
             filterIndicator: "ALL" as FilterType["indicator"],
-            started: false
+            started: false,
+            firstStart: false
         },
         (set) => (
             {
@@ -27,7 +28,8 @@ export const useAppStore = create(
                 setSoundOfCopy: (soundOfCopy: boolean) => set({ soundOfCopy }),
                 setData: (data: Data[] | null) => set({ data }),
                 setFilterIndicator: (filterIndicator: FilterType["indicator"]) => set({ filterIndicator }),
-                setStarted: (started: boolean) => set({ started })
+                setStarted: (started: boolean) => set({ started }),
+                setFirstStart: (firstStart: boolean) => set({ firstStart })
             }
         )
     )

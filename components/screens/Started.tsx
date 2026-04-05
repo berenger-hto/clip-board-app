@@ -54,6 +54,8 @@ export function Started({ loading }: Props) {
 
     const setStarted = useAppStore(state => state.setStarted)
     const started = useAppStore(state => state.started)
+    const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
+    const setFirstStart = useAppStore(state => state.setFirstStart)
     const { setValue } = useSecureStore()
 
     useEffect(() => {
@@ -68,6 +70,8 @@ export function Started({ loading }: Props) {
         translateX.value = withTiming(-width, { duration: 500, easing: Easing.out(Easing.exp) })
         setTimeout(() => {
             setStarted(true)
+            setTabActiveIndex(2)
+            setFirstStart(true)
             setValue("started", "ok")
         }, 500)
     }
@@ -99,14 +103,14 @@ export function Started({ loading }: Props) {
                 <View className="flex-row items-center gap-2 self-center">
                     <Image
                         source={require("@/assets/images/hello.gif")}
-                        style={{ width: 20, height: 20 }}
+                        style={{ width: 26, height: 26 }}
                     />
-                    <ThemedText className="text-3xl font-bold italic">
-                        Yoooooo !
+                    <ThemedText className="text-3xl font-bold">
+                        Bienvenue !
                     </ThemedText>
                 </View>
-                <ThemedText className="text-center">
-                    Copie, Synchronise, Réutilise.
+                <ThemedText className="text-center mt-2 opacity-80 italic" style={{ fontSize: 16 }}>
+                    Votre presse-papiers unifié. Copiez, synchronisez et réutilisez sans limite.
                 </ThemedText>
                 <Button
                     icon={<Feather name="chevron-right" size={20} color={colors.primary} />}
