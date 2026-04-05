@@ -5,7 +5,7 @@ import { Data } from "@/types/types";
 import Feather from '@expo/vector-icons/Feather';
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { SyncColor } from "@/constants/Colors";
-import React, { useRef, useCallback, useMemo, useEffect } from "react";
+import React, { useRef, useCallback, useMemo, useEffect, useState } from "react";
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView, useBottomSheetModal } from "@gorhom/bottom-sheet";
 import { CameraView } from "expo-camera";
 import { useToast } from "@/hooks/useToast";
@@ -14,6 +14,8 @@ import * as Device from 'expo-device'
 import { useScanner } from "@/hooks/useScanner";
 import { useDeviceManagement } from "@/hooks/useDeviceManagement";
 import { useSocketIO } from "@/hooks/useSocketIO";
+import { useBackHandler } from "@/hooks/useBackHandler";
+import { useBackAction } from "@/hooks/useBackAction";
 
 /**
  * Propriétés pour le composant DeviceItem.
@@ -71,10 +73,21 @@ export function Devices() {
     )
 
     const snapPoints = useMemo(() => ['95%'], [])
+    const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
         console.log("Other device", otherDevices)
     }, [otherDevices])
+
+    useBackHandler(() => {
+        if (isOpen) {
+            bottomSheetModalRef.current?.dismiss()
+            return true
+        }
+        return false
+    })
+
+    useBackAction()
 
     return (
         <View style={{ flex: 1 }}>
@@ -132,6 +145,9 @@ export function Devices() {
                     backgroundColor: colors.background
                 }}
                 index={0}
+                onChange={(index) => {
+                    setIsOpen(index !== -1)
+                }}
             >
                 <BottomSheetView className="p-4" style={{ height: 730 }}>
                     <View style={{ flex: 1 }}>

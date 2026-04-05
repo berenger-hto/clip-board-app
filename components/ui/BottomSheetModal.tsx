@@ -9,6 +9,7 @@ import { Button } from "@/components/forms/Button";
 import { SegmentedButton } from "./SegmentedButton";
 import type { SegmentedButtonType } from "@/types/types";
 import { useSocketIO } from "@/hooks/useSocketIO";
+import { useBackHandler } from "@/hooks/useBackHandler";
 
 type Props = {
     title: string
@@ -61,6 +62,16 @@ export function BottomSheetModal({ title, actionButtonTitle, handleAction, ref, 
         open: () => handlePresentModalPress()
     }))
 
+    const [isOpen, setIsOpen] = useState(false)
+
+    useBackHandler(() => {
+        if (isOpen) {
+            bottomSheetModalRef.current?.dismiss()
+            return true
+        }
+        return false
+    })
+
     return <>
         <Modal
             ref={bottomSheetModalRef}
@@ -79,6 +90,9 @@ export function BottomSheetModal({ title, actionButtonTitle, handleAction, ref, 
                 backgroundColor: colors.background
             }}
             index={0}
+            onChange={(index) => {
+                setIsOpen(index !== -1)
+            }}
             onDismiss={() => {
                 textValueRef.current = ""
                 setSegmentedButtonValue("AUTO")

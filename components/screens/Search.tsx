@@ -8,6 +8,7 @@ import { useSearchItem } from "@/hooks/useSearchItem"
 import { ActivityIndicator, Pressable, TextInput } from "react-native"
 import { useThemeColor } from "@/hooks/useThemeColor"
 import { useEffect, useRef } from "react"
+import { useBackAction } from "@/hooks/useBackAction"
 
 export function Search() {
     const { colors } = useThemeColor()
@@ -35,6 +36,8 @@ export function Search() {
     useEffect(() => {
         console.log("Result", results)
     }, [results])
+
+    useBackAction()
 
     return <View className="flex-1">
         <View className="flex-row items-center justify-between">

@@ -5,6 +5,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import Feather from '@expo/vector-icons/Feather';
 import { Text as NativeText, View as NativeView, Pressable, Switch, TextProps } from "react-native";
 import { useAppStore } from "@/hooks/useAppStore";
+import { useBackAction } from "@/hooks/useBackAction";
 
 type Preference = {
     name: string
@@ -57,6 +58,8 @@ export function Settings() {
         }
         */
     ]
+
+    useBackAction()
 
     return <View>
         <ThemedText className="text-3xl font-bold">Paramètres</ThemedText>
