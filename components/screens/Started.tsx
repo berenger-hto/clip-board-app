@@ -66,12 +66,14 @@ export function Started({ loading }: Props) {
         return () => clearTimeout(timer)
     }, [started])
 
-    const handleGetStarted = () => {
+    const handleGetStarted = (isPressed: boolean = false) => {
         translateX.value = withTiming(-width, { duration: 500, easing: Easing.out(Easing.exp) })
         setTimeout(() => {
             setStarted(true)
-            setTabActiveIndex(2)
-            setFirstStart(true)
+            if (isPressed) {
+                setTabActiveIndex(2)
+                setFirstStart(true)
+            }
             setValue("started", "ok")
         }, 500)
     }
@@ -116,7 +118,7 @@ export function Started({ loading }: Props) {
                     icon={<Feather name="chevron-right" size={20} color={colors.primary} />}
                     iconPosition="right"
                     className="mt-6"
-                    onPress={handleGetStarted}
+                    onPress={() => handleGetStarted(true)}
                 >
                     Demarrer
                 </Button>
