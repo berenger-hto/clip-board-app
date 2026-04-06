@@ -112,7 +112,7 @@ export function Started({ loading }: Props) {
                     </ThemedText>
                 </View>
                 <ThemedText className="text-center mt-2 opacity-80 italic" style={{ fontSize: 16 }}>
-                    Votre presse-papiers unifié. Copiez, synchronisez et réutilisez sans limite.
+                    Votre presse-papier unifié. Copiez, synchronisez et réutilisez sans limite.
                 </ThemedText>
                 <Button
                     icon={<Feather name="chevron-right" size={20} color={colors.primary} />}
