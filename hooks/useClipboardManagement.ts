@@ -32,7 +32,16 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     const { mutate: insertToClipboard } = useMutationQuery<{ content: string, type: string, source: string }>("clipboard", "POST")
     const filterIndicator = useAppStore(state => state.filterIndicator)
 
-    const { filterSuccess, data: filterData, isFilterPending, isFilterError, refetchFilter, isOffline } = useFilterItem()
+    const { 
+        filterSuccess, 
+        data: filterData, 
+        isFilterPending, 
+        isFilterError, 
+        refetchFilter, 
+        isOffline,
+        isFilterRefetching,
+        isFilterRefetchError
+    } = useFilterItem()
 
     const toast = useToast()
     const isRedirect = useAppStore(state => state.isRedirect)
@@ -46,9 +55,11 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     const isSuccess = isFiltering ? filterSuccess : isClipboardSuccess
     const isError = isFiltering ? isFilterError : isClipboardError
     const refetch = isFiltering ? refetchFilter : refetchClipboard
-    const isRefetching = isFiltering ? false : isClipboardRefetching
-    const isRefetchError = isFiltering ? false : isClipboardRefetchError
+    const isRefetching = isFiltering ? isFilterRefetching : isClipboardRefetching
+    const isRefetchError = isFiltering ? isFilterRefetchError : isClipboardRefetchError
     const autoSync = useAppStore(state => state.autoSync)
+    const setClipboardIsLoad = useAppStore(state => state.setClipboardIsLoad)
+    
 
     const shouldScroll = useRef(false)
 
@@ -75,11 +86,14 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
     useEffect(() => {
         if (!ip || !token) return
 
+        setClipboardIsLoad(clipboardData?.data ? clipboardData.data.length > 0 : false)
+
         if (isError || isRefetchError) {
             toast.show("Serveur indisponible", {
                 type: "danger"
             })
         }
+
 
         if (!isRedirect) return
         setIsRedirect(false)
@@ -139,7 +153,11 @@ export function useClipboardManagement(listRef: RefObject<FlashListRef<Data> | n
 
         const handleClipboard = async () => {
             shouldScroll.current = true
-            queryClient.invalidateQueries({ queryKey: ["filter?f=FAVORITES", "filter?f=URL", "filter?f=CODE", "filter?f=TEXT"] })
+            if (isFiltering) {
+                queryClient.invalidateQueries({ queryKey: ["filter"] })
+            } else {
+                queryClient.invalidateQueries({ queryKey: ["all"] })
+            }
             await refetch()
         }
 

@@ -13,7 +13,9 @@ export function useFilterItem() {
         isSuccess: filterSuccess,
         isPending: isFilterPending,
         isError: isFilterError,
-        refetch: refetchFilter
+        refetch: refetchFilter,
+        isRefetching: isFilterRefetching,
+        isRefetchError: isFilterRefetchError
     } = useFetchQuery<{ data: Data[] }>(`filter?f=${filterIndicator}`, undefined, {
         enabled: filterIndicator !== "ALL" && !isOffline
     })
@@ -33,7 +35,7 @@ export function useFilterItem() {
 
         return () => clearTimeout(timeOut)
 
-    }, [filterSuccess, filterIndicator])
+    }, [filterSuccess, filterIndicator, filterData])
 
     useEffect(() => {
         if (isOffline || !filterSuccess) {
@@ -53,6 +55,8 @@ export function useFilterItem() {
         filterSuccess,
         isFilterPending,
         isFilterError,
+        isFilterRefetching,
+        isFilterRefetchError,
         refetchFilter
     }
 }

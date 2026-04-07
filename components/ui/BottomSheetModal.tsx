@@ -10,6 +10,7 @@ import { SegmentedButton } from "./SegmentedButton";
 import type { SegmentedButtonType } from "@/types/types";
 import { useSocketIO } from "@/hooks/useSocketIO";
 import { useBackHandler } from "@/hooks/useBackHandler";
+import { useAppStore } from "@/hooks/useAppStore";
 
 type Props = {
     title: string
@@ -26,6 +27,7 @@ export type BottomSheetModalMethods = {
 
 export function BottomSheetModal({ title, actionButtonTitle, handleAction, ref, inputValue, buttonDisabled }: Props) {
     const { colors } = useThemeColor()
+    const clipboardIsLoad = useAppStore(state => state.clipboardIsLoad)
     const bottomSheetModalRef = useRef<Modal>(null)
     const snapPoints = useMemo(() => ['75%'], [])
     const handlePresentModalPress = useCallback(() => {
@@ -134,7 +136,7 @@ export function BottomSheetModal({ title, actionButtonTitle, handleAction, ref, 
                         className={`w-full h-16 ${buttonDisabled ? "opacity-50" : ""}`}
                         textClassName="!text-lg !font-semibold"
                         onPress={handlePressActionButton}
-                        disabled={buttonDisabled || !isConnected}
+                        disabled={buttonDisabled || !isConnected || !clipboardIsLoad}
                         activeOpacity={buttonDisabled ? .5 : .8}
                     >
                         {actionButtonTitle}

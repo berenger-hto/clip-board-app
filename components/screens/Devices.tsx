@@ -42,7 +42,7 @@ export function Devices() {
 
     // Hooks personnalisés pour la séparation de la logique
     const { permission, requestPermission, handleScan } = useScanner()
-    const { otherDevices, isCurrentDevice, registerScannedDevice } = useDeviceManagement()
+    const { otherDevices, connectedDeviceName, registerScannedDevice } = useDeviceManagement()
 
     /**
      * Ouvre le modal du scanner QR.
@@ -130,7 +130,7 @@ export function Devices() {
                             <DeviceItem
                                 type="PC"
                                 name={device.deviceName ?? "Unknown"}
-                                statut={(isConnected && isCurrentDevice === device.deviceName) ? "Online" : "Offline"}
+                                statut={(isConnected && connectedDeviceName === device.deviceName) ? "Online" : "Offline"}
                                 noBorder
                                 key={index}
                             />

@@ -15,7 +15,8 @@ export const useAppStore = create(
             data: null as Data[] | null,
             filterIndicator: "ALL" as FilterType["indicator"],
             started: false,
-            firstStart: false
+            firstStart: false,
+            clipboardIsLoad: false
         },
         (set) => (
             {
@@ -29,7 +30,8 @@ export const useAppStore = create(
                 setData: (data: Data[] | null) => set({ data }),
                 setFilterIndicator: (filterIndicator: FilterType["indicator"]) => set({ filterIndicator }),
                 setStarted: (started: boolean) => set({ started }),
-                setFirstStart: (firstStart: boolean) => set({ firstStart })
+                setFirstStart: (firstStart: boolean) => set({ firstStart }),
+                setClipboardIsLoad: (clipboardIsLoad: boolean) => set({ clipboardIsLoad })
             }
         )
     )

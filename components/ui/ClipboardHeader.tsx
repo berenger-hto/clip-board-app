@@ -13,7 +13,9 @@ export function ClipboardHeader() {
     const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
     const { colors, isDark } = useThemeColor()
     const { isConnected } = useSocketIO()
-    const syncState = isConnected ? "Connecté" : "Déconnecté"
+    const clipboardIsLoad = useAppStore(state => state.clipboardIsLoad)
+    const syncState = isConnected && clipboardIsLoad ? "Connecté" : isConnected && !clipboardIsLoad ? "Non synchronisé" : "Déconnecté"
+    const syncColor = isConnected && clipboardIsLoad ? "OK" : isConnected && !clipboardIsLoad ? "PENDING" : "NO"
 
     return <>
         <View className="items-center flex-row justify-between">
@@ -25,7 +27,7 @@ export function ClipboardHeader() {
             </Pressable>
         </View>
         <View className="mb-4 flex flex-row gap-2 items-center">
-            <NativeView className="h-2 w-2 rounded-full" style={{ backgroundColor: SyncColor[isConnected ? "OK" : "NO"] }} />
+            <NativeView className="h-2 w-2 rounded-full" style={{ backgroundColor: SyncColor[syncColor] }} />
             <ThemedText className="text-sm">
                 {syncState}
             </ThemedText>

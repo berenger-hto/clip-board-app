@@ -14,8 +14,9 @@ export function useFetchQuery<T>(
     const ip = useAppStore(state => state.ip)
     const token = useAppStore(state => state.token)
 
+    const queryKey = path.includes('?') ? [path.split('?')[0], path] : [path]
     return useQuery({
-        queryKey: [path],
+        queryKey,
         queryFn: async () => {
             const response = await fetch(`http://${ip ?? "127.0.0.1"}:${PORT}/${VERSION}/${path}`, {
                 ...options,

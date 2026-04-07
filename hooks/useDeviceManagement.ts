@@ -26,7 +26,6 @@ export function useDeviceManagement() {
     const { addDevice, getDevices, dbReady } = useSQLite()
     const { setValue } = useSecureStore()
     const [otherDevices, setOtherDevices] = useState<OS[] | null>(null)
-    const [isCurrentDevice, setIsCurrentDevice] = useState<string | null>(null)
     const setIsRedirect = useAppStore(state => state.setIsRedirect)
     const { dismiss } = useBottomSheetModal()
     const { isConnected } = useSocketIO()
@@ -59,13 +58,10 @@ export function useDeviceManagement() {
         }
     }, [dbReady, loadDevices])
 
-    // Mettre à jour le nom de l'appareil actuel à partir des données récupérées
-
-    useEffect(() => {
-        if (deviceData && deviceData.success) {
-            setIsCurrentDevice(deviceData.os?.deviceName ?? null)
-        }
-    }, [deviceData])
+    /**
+     * Nom de l'appareil auquel l'application est actuellement connectée (serveur).
+     */
+    const connectedDeviceName = deviceData?.success ? deviceData.os?.deviceName ?? null : null
 
     /**
      * Gère la réponse de l'enregistrement réussi.
@@ -83,11 +79,14 @@ export function useDeviceManagement() {
                         loadDevices()
                         setIsRedirect(true)
                         setTabActiveIndex(0)
+                        
+                        // Invalider toutes les données liées à l'application
+                        const queriesToInvalidate = ["clipboard", "device", "all", "filter"]
+                        queriesToInvalidate.forEach(key => queryClient.invalidateQueries({ queryKey: [key] }))
                     })
-                queryClient.invalidateQueries({ queryKey: ["clipboard", "all"] })
             }
         }
-    }, [isSuccess, responseData, addDevice, loadDevices, toast])
+    }, [isSuccess, responseData, addDevice, loadDevices, toast, queryClient])
 
     /**
      * Invalider la req de device quand le statut de connexion change
@@ -137,7 +136,7 @@ export function useDeviceManagement() {
 
     return {
         otherDevices,
-        isCurrentDevice,
+        connectedDeviceName,
         registerScannedDevice,
         loadDevices,
         dbReady

@@ -32,6 +32,7 @@ export function FilterItemButtons() {
     const filterIndicator = useAppStore(state => state.filterIndicator)
     const setFilterIndicator = useAppStore(state => state.setFilterIndicator)
     const { isConnected } = useSocketIO()
+    const clipboardIsLoad = useAppStore(state => state.clipboardIsLoad)
     
     return <View className="h-30 pb-4">
         <ScrollView
@@ -46,7 +47,7 @@ export function FilterItemButtons() {
                         key={index}
                         active={button.indicator === filterIndicator}
                         onPress={() => setFilterIndicator(button.indicator)}
-                        disabled={!isConnected}
+                        disabled={!isConnected || !clipboardIsLoad}
                     >
                         {button.name}
                     </Button>
