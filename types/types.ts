@@ -1,3 +1,5 @@
+import { QueryObserverResult } from "@tanstack/react-query"
+
 export type Data = {
     id: string
     type: "CODE" | "TEXT" | "URL"
@@ -35,4 +37,28 @@ export type SegmentedButtonType = "AUTO" | "TEXT" | "URL" | "CODE"
 export type FilterType = {
     name: string
     indicator: "ALL" | "URL" | "CODE" | "TEXT" | "FAVORITES"
+}
+
+export type ClipboardPayload = {
+    content: string
+    type: string
+    source: Data["source"]
+}
+
+export type ClipboardQuery = {
+    ip: string | null
+    token: string | null
+    isFiltering: boolean
+    data: Data[]
+    isPending: boolean
+    isSuccess: boolean
+    isError: boolean
+    isRefetching: boolean
+    isRefetchError: boolean
+    refetch: () => Promise<QueryObserverResult<DefaultResponse & {
+        data: Data[]
+    }, Error>>
+    clipboardData: (DefaultResponse & {
+        data: Data[]
+    }) | undefined
 }

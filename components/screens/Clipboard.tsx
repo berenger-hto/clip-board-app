@@ -2,7 +2,7 @@ import { ClipboardHeader } from "@/components/ui/ClipboardHeader";
 import { ActivityIndicator, RefreshControl } from "react-native";
 import { ClipboardCard } from "@/components/datas/ClipboardCard";
 import { View } from "@/components/View";
-import { useClipboardManagement } from "@/hooks/useClipboardManagement";
+import { useClipboard } from "@/hooks/useClipboard";
 import { useAppStore } from "@/hooks/useAppStore";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
 import { useRef } from "react";
@@ -11,13 +11,15 @@ import { ThemedText } from "@/components/ThemedText";
 import { Button } from "@/components/forms/Button";
 import { AddItemToClipboard } from "../ui/AddItemToClipboard";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 export function Clipboard() {
 
     const listRef = useRef<FlashListRef<Data> | null>(null)
-    const { data, isPending, isRefetching, refetch, token, ip, scrollTopToRefetch } = useClipboardManagement(listRef)
+    const { data, isPending, isRefetching, refetch, token, ip } = useClipboard(listRef)
     const setTabActiveIndex = useAppStore(state => state.setTabActiveIndex)
     const { colors } = useThemeColor()
+    const scrollToTop = useScrollToTop(listRef)
 
     return <>
         <View style={{ flex: 1 }}>
@@ -25,7 +27,7 @@ export function Clipboard() {
             <FlashList
                 className="flex-1 h-full"
                 ref={listRef}
-                data={data ?? []}
+                data={data}
                 renderItem={({ item }) => <ClipboardCard data={item} />}
                 keyExtractor={(item) => item.id}
                 ListEmptyComponent={
@@ -45,9 +47,7 @@ export function Clipboard() {
                         refreshing={isRefetching}
                         onRefresh={async () => {
                             await refetch()
-                            if (data && data.length > 0 && !isRefetching) {
-                                scrollTopToRefetch(1000)
-                            }
+                            scrollToTop()
                         }}
                     />
                 }

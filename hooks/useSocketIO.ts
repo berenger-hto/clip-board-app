@@ -1,39 +1,24 @@
 import { io, Socket } from "socket.io-client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAppStore } from "./useAppStore";
+import { useNetworkStatus } from "./useNetworkStatus";
 
 const PORT = 9876
-let socketInstance: Socket | null = null
-let currentIp: string | null = null
 
 export function useSocketIO() {
     const ip = useAppStore(state => state.ip)
-    const [isConnected, setIsConnected] = useState(socketInstance?.connected || false)
+    const socketInstance = useRef<Socket | null>(null)
+    const lastIp = useRef<string | null>(null)
+    const [isConnected, setIsConnected] = useState(socketInstance.current?.connected || false)
+    const isWifi = useNetworkStatus()
 
     useEffect(() => {
-        if (!ip) {
-            if (socketInstance) {
-                socketInstance.disconnect()
-                socketInstance = null
-                currentIp = null
-                setIsConnected(false)
-            }
+        if (!ip || !isWifi) {
+            socketInstance.current?.disconnect()
+            socketInstance.current = null
+            lastIp.current = null
             return
-        }
-
-        if (!socketInstance || ip !== currentIp) {
-            if (socketInstance) {
-                socketInstance.disconnect()
-            }
-
-            currentIp = ip
-            socketInstance = io(`http://${ip}:${PORT}`, {
-                transports: ["websocket"],
-                reconnection: true,
-                reconnectionAttempts: 10,
-                reconnectionDelay: 2000
-            })
-        }
+        }   
 
         const onConnect = () => {
             setIsConnected(true)
@@ -43,24 +28,33 @@ export function useSocketIO() {
             setIsConnected(false)
         }
 
-        const onConnectError = (error: any) => {
+        const onConnectError = () => {
             setIsConnected(false)
+        } 
+
+        if (!socketInstance.current || ip !== lastIp.current) {
+            socketInstance.current?.disconnect()
+
+            socketInstance.current = io(`http://${ip}:${PORT}`, {
+                transports: ["websocket"],
+                reconnection: true,
+                reconnectionAttempts: Infinity,
+                reconnectionDelay: 2000
+            })
+
+            lastIp.current = ip
+
+            socketInstance.current.on("connect", onConnect)
+            socketInstance.current.on("disconnect", onDisconnect)
+            socketInstance.current.on("connect_error", onConnectError)
         }
-
-        socketInstance.on("connect", onConnect)
-        socketInstance.on("disconnect", onDisconnect)
-        socketInstance.on("connect_error", onConnectError)
-
-        setIsConnected(socketInstance.connected)
 
         return () => {
-            if (socketInstance) {
-                socketInstance.off("connect", onConnect)
-                socketInstance.off("disconnect", onDisconnect)
-                socketInstance.off("connect_error", onConnectError)
-            }
+            socketInstance.current?.off("connect", onConnect)
+            socketInstance.current?.off("disconnect", onDisconnect)
+            socketInstance.current?.off("connect_error", onConnectError)
         }
-    }, [ip])
+    }, [ip, isWifi])
 
-    return { socket: socketInstance, isConnected }
+    return { socket: socketInstance.current, isConnected }
 }
