@@ -1,4 +1,4 @@
-import { TouchableOpacity, View as NativeView, Pressable } from "react-native";
+import { TouchableOpacity, View as NativeView } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { type RefObject, useCallback, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { BottomSheetBackdrop, BottomSheetModal as Modal, BottomSheetView, useBottomSheetModal } from "@gorhom/bottom-sheet";
@@ -19,13 +19,14 @@ type Props = {
     ref: RefObject<BottomSheetModalMethods | null>
     inputValue?: string
     buttonDisabled?: boolean
+    clearContentOnDismiss?: boolean 
 }
 
 export type BottomSheetModalMethods = {
     open: () => void
 }
 
-export function BottomSheetModal({ title, actionButtonTitle, handleAction, ref, inputValue, buttonDisabled }: Props) {
+export function BottomSheetModal({ title, actionButtonTitle, handleAction, ref, inputValue, buttonDisabled, clearContentOnDismiss = true }: Props) {
     const { colors } = useThemeColor()
     const clipboardIsLoad = useAppStore(state => state.clipboardIsLoad)
     const bottomSheetModalRef = useRef<Modal>(null)
@@ -96,6 +97,7 @@ export function BottomSheetModal({ title, actionButtonTitle, handleAction, ref, 
                 setIsOpen(index !== -1)
             }}
             onDismiss={() => {
+                if (!clearContentOnDismiss) return
                 textValueRef.current = ""
                 setSegmentedButtonValue("AUTO")
             }}

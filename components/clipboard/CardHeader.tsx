@@ -11,7 +11,7 @@ type Props = {
     starDisabled: boolean
 }
 
-export function CardPreviewHeader({ mutate, favorite, starDisabled }: Props) {
+export function CardHeader({ mutate, favorite, starDisabled }: Props) {
     const { isDark } = useThemeColor()
     const color = favorite ? "#ffd700" : isDark ? "#94a3b8" : "#475569"
 

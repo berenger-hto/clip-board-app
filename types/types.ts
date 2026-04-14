@@ -1,4 +1,4 @@
-import { QueryObserverResult } from "@tanstack/react-query"
+import { QueryObserverResult, UseMutationResult } from "@tanstack/react-query"
 
 export type Data = {
     id: string
@@ -61,4 +61,15 @@ export type ClipboardQuery = {
     clipboardData: (DefaultResponse & {
         data: Data[]
     }) | undefined
+}
+
+export type EditMutation = {
+    content: string
+    type: SegmentedButtonType
+}
+
+export type MutationEffect = {
+    deleteMutation: UseMutationResult<DefaultResponse, Error, void, unknown>,
+    editMutation: UseMutationResult<DefaultResponse, Error, EditMutation | undefined, unknown>,
+    favoriteMutation: UseMutationResult<DefaultResponse, Error, void, unknown>
 }
